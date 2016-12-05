@@ -1,7 +1,7 @@
 {
   "main": "index.js",
   "scripts": {
-    "start": "webpack -p && node index.js",
+    "start": "node index.js",
     "build": "webpack -p",
     "watch": "webpack -d --watch"
   },
@@ -27,5 +27,22 @@
   "description": "Real-time chat",
   "author": "Alec Lownes",
   "license": "ISC",
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "eslint-config-xo-react": "^0.10.0",
+    "eslint-plugin-react": "^6.8.0",
+    "xo": "^0.17.1"
+  },
+  "xo": {
+    "rules": {
+      "linebreak-style": [
+        "off"
+      ]
+    },
+    "extends": "xo-react",
+    "envs": [
+      "browser",
+      "node"
+    ]
+  }
 }

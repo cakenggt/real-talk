@@ -1,58 +1,57 @@
-import 'babel-polyfill';
+import 'babel-polyfill'; // eslint-disable-line import/no-unassigned-import
 import React from 'react';
 import {Router, Route, IndexRoute, browserHistory} from 'react-router';
 import {render} from 'react-dom';
 import {Provider, connect} from 'react-redux';
 import {createStore, combineReducers, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
-import dataReducer from './reducers/dataReducer.js';
-import {loadData} from './actionCreators/dataActions.js';
-var socket = io.connect('');
+import ChatView from './components/chat-view.jsx';
+import LoginView from './components/login-view.jsx';
+import chatReducer from './reducers/chat-reducer';
 
 var reducer = combineReducers({
-  data: dataReducer
+	chat: chatReducer
 });
 
 var store = createStore(
-  reducer,
-  applyMiddleware(thunk)
+	reducer,
+	applyMiddleware(thunk)
 );
 
-
-var mapStateToProps = (state) => {
-  return {
-    data: state.data
-  }
-}
-
-var mapDispatchToProps = (dispatch) => {
-  return {
-    loadData: function(newData){
-      dispatch(loadData(newData));
-    }
-  }
-}
+var mapStateToProps = state => {
+	return {
+		chat: state.chat
+	};
+};
 
 var Index = connect(
-  mapStateToProps,
-  mapDispatchToProps
+	mapStateToProps
 )(React.createClass({
-  render: function() {
-    return (
-      <div></div>
-    );
-  }
+	propTypes: {
+		chat: React.PropTypes.shape({
+			room: React.PropTypes.string,
+			username: React.PropTypes.string
+		})
+	},
+	render: function () {
+		var view = this.props.chat.room ? <ChatView/> : <LoginView/>;
+		return (
+			<div>
+				{view}
+			</div>
+		);
+	}
 }));
 
 var router = (
-  <Router history={browserHistory}>
-    <Route path="/" >
-      <IndexRoute component={Index}/>
-    </Route>
-  </Router>
+	<Router history={browserHistory}>
+		<Route path="/" >
+			<IndexRoute component={Index}/>
+		</Route>
+	</Router>
 );
 
 render(
-  <Provider store={store}>{router}</Provider>,
-  document.getElementById('app')
+	<Provider store={store}>{router}</Provider>,
+	document.getElementById('app')
 );
