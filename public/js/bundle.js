@@ -63,30 +63,36 @@
 	
 	var _redux = __webpack_require__(/*! redux */ 544);
 	
-	var _reduxThunk = __webpack_require__(/*! redux-thunk */ 565);
+	var _reduxSocket = __webpack_require__(/*! redux-socket.io */ 565);
+	
+	var _reduxSocket2 = _interopRequireDefault(_reduxSocket);
+	
+	var _reduxThunk = __webpack_require__(/*! redux-thunk */ 566);
 	
 	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 	
-	var _chatView = __webpack_require__(/*! ./components/chat-view.jsx */ 566);
+	var _chatView = __webpack_require__(/*! ./components/chat-view.jsx */ 567);
 	
 	var _chatView2 = _interopRequireDefault(_chatView);
 	
-	var _loginView = __webpack_require__(/*! ./components/login-view.jsx */ 568);
+	var _loginView = __webpack_require__(/*! ./components/login-view.jsx */ 569);
 	
 	var _loginView2 = _interopRequireDefault(_loginView);
 	
-	var _chatReducer = __webpack_require__(/*! ./reducers/chat-reducer */ 569);
+	var _chatReducer = __webpack_require__(/*! ./reducers/chat-reducer */ 570);
 	
 	var _chatReducer2 = _interopRequireDefault(_chatReducer);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
+	// eslint-disable-line import/no-unassigned-import
+	var socket = io(); /* global io */
+	
 	var reducer = (0, _redux.combineReducers)({
 		chat: _chatReducer2.default
-	}); // eslint-disable-line import/no-unassigned-import
+	});
 	
-	
-	var store = (0, _redux.createStore)(reducer, (0, _redux.applyMiddleware)(_reduxThunk2.default));
+	var store = (0, _redux.createStore)(reducer, (0, _redux.applyMiddleware)(_reduxThunk2.default, (0, _reduxSocket2.default)(socket, 'server/')));
 	
 	var mapStateToProps = function mapStateToProps(state) {
 		return {
@@ -99,8 +105,7 @@
 	
 		propTypes: {
 			chat: _react2.default.PropTypes.shape({
-				room: _react2.default.PropTypes.string,
-				username: _react2.default.PropTypes.string
+				room: _react2.default.PropTypes.string
 			})
 		},
 		render: function render() {
@@ -38456,6 +38461,85 @@
 
 /***/ },
 /* 565 */
+/*!*****************************************!*\
+  !*** ./~/redux-socket.io/dist/index.js ***!
+  \*****************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = createSocketIoMiddleware;
+	
+	/**
+	* Allows you to register actions that when dispatched, send the action to the
+	* server via a socket.io socket.
+	* `criteria` may be a function (type, action) that returns true if you wish to send the
+	*  action to the server, array of action types, or a string prefix.
+	* the third parameter is an options object with the following properties:
+	* {
+	*   eventName,// a string name to use to send and receive actions from the server.
+	*   execute, // a function (action, emit, next, dispatch) that is responsible for
+	*            // sending the message to the server.
+	* }
+	*
+	*/
+	function createSocketIoMiddleware(socket) {
+	  var criteria = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+	
+	  var _ref = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
+	      _ref$eventName = _ref.eventName,
+	      eventName = _ref$eventName === undefined ? 'action' : _ref$eventName,
+	      _ref$execute = _ref.execute,
+	      execute = _ref$execute === undefined ? defaultExecute : _ref$execute;
+	
+	  var emitBound = socket.emit.bind(socket);
+	  return function (_ref2) {
+	    var dispatch = _ref2.dispatch;
+	
+	    // Wire socket.io to dispatch actions sent by the server.
+	    socket.on(eventName, dispatch);
+	    return function (next) {
+	      return function (action) {
+	        if (evaluate(action, criteria)) {
+	          execute(action, emitBound, next, dispatch);
+	        } else {
+	          next(action);
+	        }
+	      };
+	    };
+	  };
+	
+	  function evaluate(action, option) {
+	    var type = action.type;
+	
+	    var matched = false;
+	    if (typeof option === 'function') {
+	      // Test function
+	      matched = option(type, action);
+	    } else if (typeof option === 'string') {
+	      // String prefix
+	      matched = type.indexOf(option) === 0;
+	    } else if (Array.isArray(option)) {
+	      // Array of types
+	      matched = option.some(function (item) {
+	        return type.indexOf(item) === 0;
+	      });
+	    }
+	    return matched;
+	  }
+	
+	  function defaultExecute(action, emit, next, dispatch) {
+	    // eslint-disable-line no-unused-vars
+	    emit(eventName, action);
+	    next(action);
+	  }
+	}
+
+/***/ },
+/* 566 */
 /*!************************************!*\
   !*** ./~/redux-thunk/lib/index.js ***!
   \************************************/
@@ -38486,7 +38570,7 @@
 	exports['default'] = thunk;
 
 /***/ },
-/* 566 */
+/* 567 */
 /*!**************************************!*\
   !*** ./app/components/chat-view.jsx ***!
   \**************************************/
@@ -38504,15 +38588,149 @@
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 537);
 	
-	var _chatActions = __webpack_require__(/*! ../actionCreators/chat-actions */ 567);
+	var _chatActions = __webpack_require__(/*! ../actionCreators/chat-actions */ 568);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var ChatView = _react2.default.createClass({
 		displayName: 'ChatView',
 	
+		propTypes: {
+			chat: _react2.default.PropTypes.shape({
+				room: _react2.default.PropTypes.string,
+				username: _react2.default.PropTypes.string,
+				users: _react2.default.PropTypes.array,
+				history: _react2.default.PropTypes.array,
+				current: _react2.default.PropTypes.array
+			}),
+			sendChange: _react2.default.PropTypes.func,
+			sendMessage: _react2.default.PropTypes.func
+		},
+		getInitialState: function getInitialState() {
+			return {
+				message: ''
+			};
+		},
 		render: function render() {
-			return null;
+			var users = this.props.chat.users.map(function (elem, i) {
+				return _react2.default.createElement(
+					'div',
+					{
+						key: i
+					},
+					elem
+				);
+			});
+			var history = this.props.chat.history.map(function (elem, i) {
+				return _react2.default.createElement(
+					'div',
+					{
+						key: i
+					},
+					_react2.default.createElement(
+						'div',
+						null,
+						elem.user
+					),
+					_react2.default.createElement(
+						'div',
+						null,
+						elem.message
+					)
+				);
+			});
+			var current = this.props.chat.current.map(function (elem, i) {
+				return _react2.default.createElement(
+					'div',
+					{
+						key: i
+					},
+					_react2.default.createElement(
+						'div',
+						null,
+						elem.user
+					),
+					_react2.default.createElement(
+						'div',
+						null,
+						elem.message
+					)
+				);
+			});
+			return _react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(
+						'h2',
+						null,
+						'Users'
+					),
+					_react2.default.createElement(
+						'div',
+						null,
+						users
+					)
+				),
+				_react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(
+						'div',
+						null,
+						_react2.default.createElement(
+							'h2',
+							null,
+							'History'
+						),
+						_react2.default.createElement(
+							'div',
+							null,
+							history
+						)
+					),
+					_react2.default.createElement(
+						'div',
+						null,
+						'text goes here',
+						_react2.default.createElement('input', {
+							value: this.state.message,
+							onKeyPress: this.handleKeyPress,
+							onChange: this.handleChange
+						})
+					),
+					_react2.default.createElement(
+						'div',
+						null,
+						_react2.default.createElement(
+							'h2',
+							null,
+							'Current'
+						),
+						_react2.default.createElement(
+							'div',
+							null,
+							current
+						)
+					)
+				)
+			);
+		},
+		handleKeyPress: function handleKeyPress(e) {
+			if (e.key === 'Enter') {
+				this.props.sendMessage(this.state.message);
+				this.setState({
+					message: ''
+				});
+			}
+		},
+		handleChange: function handleChange(e) {
+			this.setState({
+				message: e.target.value
+			});
+			this.props.sendChange(e.target.value);
 		}
 	});
 	
@@ -38526,6 +38744,12 @@
 		return {
 			join: function join(room, username) {
 				dispatch((0, _chatActions.join)(room, username));
+			},
+			sendChange: function sendChange(message) {
+				dispatch((0, _chatActions.sendChange)(message));
+			},
+			sendMessage: function sendMessage(message) {
+				dispatch((0, _chatActions.sendMessage)(message));
 			}
 		};
 	};
@@ -38533,7 +38757,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(ChatView);
 
 /***/ },
-/* 567 */
+/* 568 */
 /*!********************************************!*\
   !*** ./app/actionCreators/chat-actions.js ***!
   \********************************************/
@@ -38545,33 +38769,48 @@
 		value: true
 	});
 	exports.join = join;
-	/* global io */
-	
-	var socket = io.connect('');
-	
+	exports.sendChange = sendChange;
+	exports.sendMessage = sendMessage;
 	function join(room, username) {
 		return function (dispatch) {
-			socket.emit('join', {
-				room: room,
-				username: username
-			}, function (success) {
-				if (success) {
-					dispatch({
-						type: 'JOIN',
-						data: {
-							room: room,
-							username: username
-						}
-					});
-				} else {
-					console.log('join fail');
+			dispatch({
+				type: 'server/JOIN',
+				data: {
+					room: room,
+					username: username
+				}
+			});
+		};
+	}
+	
+	function sendChange(message) {
+		return function (dispatch) {
+			dispatch({
+				type: 'server/MESSAGE_CHANGE',
+				data: message
+			});
+		};
+	}
+	
+	function sendMessage(message) {
+		return function (dispatch, getState) {
+			var state = getState();
+			dispatch({
+				type: 'server/MESSAGE_SEND',
+				data: message
+			});
+			dispatch({
+				type: 'MESSAGE_SEND',
+				data: {
+					user: state.chat.username,
+					message: message
 				}
 			});
 		};
 	}
 
 /***/ },
-/* 568 */
+/* 569 */
 /*!***************************************!*\
   !*** ./app/components/login-view.jsx ***!
   \***************************************/
@@ -38589,7 +38828,7 @@
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 537);
 	
-	var _chatActions = __webpack_require__(/*! ../actionCreators/chat-actions */ 567);
+	var _chatActions = __webpack_require__(/*! ../actionCreators/chat-actions */ 568);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -38599,21 +38838,61 @@
 		propTypes: {
 			join: _react2.default.PropTypes.func
 		},
+		getInitialState: function getInitialState() {
+			return {
+				room: '',
+				username: ''
+			};
+		},
 		render: function render() {
 			return _react2.default.createElement(
 				'div',
 				null,
 				_react2.default.createElement(
-					'span',
-					{
-						onClick: this.handleJoin
-					},
-					'here'
+					'h2',
+					null,
+					'Join Chat Room'
+				),
+				_react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(
+						'div',
+						null,
+						'Room:',
+						_react2.default.createElement('input', {
+							onChange: this.createChangeHandler('room')
+						})
+					),
+					_react2.default.createElement(
+						'div',
+						null,
+						'Username:',
+						_react2.default.createElement('input', {
+							onChange: this.createChangeHandler('username')
+						})
+					),
+					_react2.default.createElement(
+						'span',
+						{
+							onClick: this.handleJoin
+						},
+						'Join'
+					)
 				)
 			);
 		},
 		handleJoin: function handleJoin() {
-			this.props.join('test', 'tester');
+			this.props.join(this.state.room, this.state.username);
+		},
+		createChangeHandler: function createChangeHandler(attr) {
+			var _this = this;
+	
+			return function (e) {
+				var newState = {};
+				newState[attr] = e.target.value;
+				_this.setState(newState);
+			};
 		}
 	});
 	
@@ -38628,7 +38907,7 @@
 	exports.default = (0, _reactRedux.connect)(null, mapDispatchToProps)(LoginView);
 
 /***/ },
-/* 569 */
+/* 570 */
 /*!**************************************!*\
   !*** ./app/reducers/chat-reducer.js ***!
   \**************************************/
@@ -38645,16 +38924,66 @@
 		var action = arguments[1];
 	
 		switch (action.type) {
-			case 'JOIN':
-				return action.data;
+			case 'SELF_JOIN':
+				return Object.assign({}, state, {
+					room: action.data.room,
+					username: action.data.username,
+					users: action.data.users
+				});
+			case 'USER_JOIN':
+				var users = state.users;
+				users.push(action.data);
+				return Object.assign({}, state, {
+					users: users
+				});
+			case 'USER_LEAVE':
+				var newUsers = state.users.filter(function (elem) {
+					return elem !== action.data;
+				});
+				var newCurrent = state.current.filter(function (elem) {
+					return elem.user !== action.data;
+				});
+				return Object.assign({}, state, {
+					users: newUsers,
+					current: newCurrent
+				});
+			case 'MESSAGE_SEND':
+				return Object.assign({}, state, {
+					current: state.current.filter(function (elem) {
+						return elem.user !== action.data.user;
+					}),
+					history: [].concat(_toConsumableArray(state.history), [action.data])
+				});
+			case 'MESSAGE_CHANGE':
+				var isIncluded = false;
+				var changeCurrent = state.current.map(function (elem) {
+					if (elem.user === action.data.user) {
+						isIncluded = true;
+						return Object.assign({}, elem, {
+							message: action.data.message
+						});
+					}
+					return elem;
+				});
+				if (!isIncluded) {
+					changeCurrent.push(action.data);
+				}
+				return Object.assign({}, state, {
+					current: changeCurrent
+				});
 			default:
 				return state;
 		}
 	};
 	
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+	
 	var defaultState = {
 		room: '',
-		username: ''
+		username: '',
+		users: [],
+		history: [], // {user: string, message: string}
+		current: [] // {user: string, message: string}
 	};
 
 /***/ }

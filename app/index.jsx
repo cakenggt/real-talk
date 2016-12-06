@@ -1,13 +1,18 @@
+/* global io */
+
 import 'babel-polyfill'; // eslint-disable-line import/no-unassigned-import
 import React from 'react';
 import {Router, Route, IndexRoute, browserHistory} from 'react-router';
 import {render} from 'react-dom';
 import {Provider, connect} from 'react-redux';
-import {createStore, combineReducers, applyMiddleware} from 'redux';
+import {createStore, combineReducers, applyMiddleware, compose} from 'redux';
+import createSocketIoMiddleware from 'redux-socket.io';
 import thunk from 'redux-thunk';
 import ChatView from './components/chat-view.jsx';
 import LoginView from './components/login-view.jsx';
 import chatReducer from './reducers/chat-reducer';
+
+let socket = io();
 
 var reducer = combineReducers({
 	chat: chatReducer
@@ -15,7 +20,10 @@ var reducer = combineReducers({
 
 var store = createStore(
 	reducer,
-	applyMiddleware(thunk)
+	applyMiddleware(
+		thunk,
+		createSocketIoMiddleware(socket, 'server/')
+	)
 );
 
 var mapStateToProps = state => {
@@ -29,8 +37,7 @@ var Index = connect(
 )(React.createClass({
 	propTypes: {
 		chat: React.PropTypes.shape({
-			room: React.PropTypes.string,
-			username: React.PropTypes.string
+			room: React.PropTypes.string
 		})
 	},
 	render: function () {

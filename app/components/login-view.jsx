@@ -6,17 +6,45 @@ var LoginView = React.createClass({
 	propTypes: {
 		join: React.PropTypes.func
 	},
+	getInitialState: function () {
+		return {
+			room: '',
+			username: ''
+		};
+	},
 	render: function () {
 		return (
 			<div>
-				<span
-					onClick={this.handleJoin}
-					>here</span>
+				<h2>Join Chat Room</h2>
+				<div>
+					<div>
+						Room:
+						<input
+							onChange={this.createChangeHandler('room')}
+							/>
+					</div>
+					<div>
+						Username:
+						<input
+							onChange={this.createChangeHandler('username')}
+							/>
+					</div>
+					<span
+						onClick={this.handleJoin}
+						>Join</span>
+				</div>
 			</div>
 		);
 	},
 	handleJoin: function () {
-		this.props.join('test', 'tester');
+		this.props.join(this.state.room, this.state.username);
+	},
+	createChangeHandler: function (attr) {
+		return e => {
+			var newState = {};
+			newState[attr] = e.target.value;
+			this.setState(newState);
+		};
 	}
 });
 
