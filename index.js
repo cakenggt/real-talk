@@ -21,14 +21,6 @@ server.listen(port, function () {
 	console.log('Example app listening on port ' + port + '!');
 });
 
-// This is the options object that will be passed to the api files
-let apiOptions = {
-	app: app
-};
-
-// Load the api versions
-require('./api/v1')(apiOptions);
-
 /*
 * This tells the server to always serve index.html no matter what,
 * excluding the previously defined api routes. This is so we can use
