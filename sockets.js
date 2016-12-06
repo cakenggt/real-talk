@@ -11,19 +11,20 @@ module.exports = function (options) {
 
 	io.on('connection', function (socket) {
 		var roomName;
-		var username;
+		var userName;
 
 		socket.on('action', action => {
 			if (action.type === 'server/JOIN') {
 				var room = action.data.room;
-				username = action.data.username;
+				var username = action.data.username;
 				var roomSet = roomMap[room];
-				if (!roomSet || !roomSet.has(username)) {
+				if (room && (!roomSet || !roomSet.has(username))) {
 					if (!roomSet) {
 						roomSet = new Set();
 						roomMap[room] = roomSet;
 					}
 					roomName = room;
+					userName = username;
 					socket.emit('action', {
 						type: 'SELF_JOIN',
 						data: {
@@ -52,7 +53,7 @@ module.exports = function (options) {
 				socket.broadcast.to(roomName).emit('action', {
 					type: 'MESSAGE_CHANGE',
 					data: {
-						user: username,
+						user: userName,
 						message: action.data
 					}
 				});
@@ -60,7 +61,7 @@ module.exports = function (options) {
 				socket.broadcast.to(roomName).emit('action', {
 					type: 'MESSAGE_SEND',
 					data: {
-						user: username,
+						user: userName,
 						message: action.data
 					}
 				});
@@ -68,12 +69,16 @@ module.exports = function (options) {
 		});
 
 		socket.on('disconnect', function () {
-			if (roomMap[roomName]) {
-				roomMap[roomName].delete(username);
+			var roomSet = roomMap[roomName];
+			if (roomSet) {
+				roomSet.delete(userName);
 				socket.broadcast.to(roomName).emit('action', {
 					type: 'USER_LEAVE',
-					data: username
+					data: userName
 				});
+				if (!roomSet.size) {
+					delete roomMap[roomName];
+				}
 			}
 		});
 	});
