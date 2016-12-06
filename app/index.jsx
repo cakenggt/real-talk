@@ -5,7 +5,7 @@ import React from 'react';
 import {Router, Route, IndexRoute, browserHistory} from 'react-router';
 import {render} from 'react-dom';
 import {Provider, connect} from 'react-redux';
-import {createStore, combineReducers, applyMiddleware, compose} from 'redux';
+import {createStore, combineReducers, applyMiddleware} from 'redux';
 import createSocketIoMiddleware from 'redux-socket.io';
 import thunk from 'redux-thunk';
 import ChatView from './components/chat-view.jsx';
@@ -43,7 +43,12 @@ var Index = connect(
 	render: function () {
 		var view = this.props.chat.room ? <ChatView/> : <LoginView/>;
 		return (
-			<div>
+			<div
+				style={{
+					minWidth: '600px',
+					margin: '20px'
+				}}
+				>
 				{view}
 			</div>
 		);

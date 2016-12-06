@@ -1,10 +1,12 @@
 'use strict';
 
+const http = require('http');
+const path = require('path');
 const express = require('express');
+const bodyParser = require('body-parser');
 
 const app = express();
-const bodyParser = require('body-parser');
-const http = require('http').Server(app);
+const server = http.Server(app);// eslint-disable-line new-cap
 
 // parse application/json
 app.use(bodyParser.json());
@@ -15,7 +17,7 @@ app.use(express.static('public'));
 
 // This tells the server to listen
 var port = process.env.PORT;
-http.listen(port, function () {
+server.listen(port, function () {
 	console.log('Example app listening on port ' + port + '!');
 });
 
@@ -33,11 +35,11 @@ require('./api/v1')(apiOptions);
 * react-router's browserHistory feature.
 */
 app.get('*', function (req, res) {
-	res.sendFile(__dirname + '/public/html/index.html');
+	res.sendFile(path.join(__dirname, '/public/html/index.html'));
 });
 
 var socketOptions = {
-	app: http
+	app: server
 };
 // Load the socket file
 require('./sockets')(socketOptions);

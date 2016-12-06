@@ -30,16 +30,26 @@ var ChatView = React.createClass({
 			);
 		});
 		var history = this.props.chat.history.map(function (elem, i) {
+			var messageStyle = {};
+			if (!elem.user) {
+				messageStyle.fontStyle = 'italic';
+			}
 			return (
 				<div
 					key={i}
 					>
-					<div>
+					<span
+						style={{
+							fontStyle: 'bold'
+						}}
+						>
 						{elem.user}
-					</div>
-					<div>
+					</span>
+					<span
+						style={messageStyle}
+						>
 						{elem.message}
-					</div>
+					</span>
 				</div>
 			);
 		});
@@ -58,14 +68,21 @@ var ChatView = React.createClass({
 			);
 		});
 		return (
-			<div>
-				<div>
-					<h2>Users</h2>
-					<div>
-						{users}
-					</div>
-				</div>
-				<div>
+			<div
+				style={{
+					display: 'flex'
+				}}
+				>
+
+				<div
+					style={{
+						flex: '1',
+						border: '2px black solid',
+						borderRadius: '3px',
+						margin: '3px',
+						padding: '3px'
+					}}
+					>
 					<div>
 						<h2>History</h2>
 						<div>
@@ -85,6 +102,20 @@ var ChatView = React.createClass({
 						<div>
 							{current}
 						</div>
+					</div>
+				</div>
+				<div
+					style={{
+						flex: '0 0 20%',
+						border: '2px black solid',
+						borderRadius: '3px',
+						margin: '3px',
+						padding: '3px'
+					}}
+					>
+					<h2>Users</h2>
+					<div>
+						{users}
 					</div>
 				</div>
 			</div>

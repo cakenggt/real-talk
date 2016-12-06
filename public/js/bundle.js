@@ -112,7 +112,12 @@
 			var view = this.props.chat.room ? _react2.default.createElement(_chatView2.default, null) : _react2.default.createElement(_loginView2.default, null);
 			return _react2.default.createElement(
 				'div',
-				null,
+				{
+					style: {
+						minWidth: '600px',
+						margin: '20px'
+					}
+				},
 				view
 			);
 		}
@@ -38622,19 +38627,29 @@
 				);
 			});
 			var history = this.props.chat.history.map(function (elem, i) {
+				var messageStyle = {};
+				if (!elem.user) {
+					messageStyle.fontStyle = 'italic';
+				}
 				return _react2.default.createElement(
 					'div',
 					{
 						key: i
 					},
 					_react2.default.createElement(
-						'div',
-						null,
+						'span',
+						{
+							style: {
+								fontStyle: 'bold'
+							}
+						},
 						elem.user
 					),
 					_react2.default.createElement(
-						'div',
-						null,
+						'span',
+						{
+							style: messageStyle
+						},
 						elem.message
 					)
 				);
@@ -38659,24 +38674,22 @@
 			});
 			return _react2.default.createElement(
 				'div',
-				null,
+				{
+					style: {
+						display: 'flex'
+					}
+				},
 				_react2.default.createElement(
 					'div',
-					null,
-					_react2.default.createElement(
-						'h2',
-						null,
-						'Users'
-					),
-					_react2.default.createElement(
-						'div',
-						null,
-						users
-					)
-				),
-				_react2.default.createElement(
-					'div',
-					null,
+					{
+						style: {
+							flex: '1',
+							border: '2px black solid',
+							borderRadius: '3px',
+							margin: '3px',
+							padding: '3px'
+						}
+					},
 					_react2.default.createElement(
 						'div',
 						null,
@@ -38714,6 +38727,28 @@
 							null,
 							current
 						)
+					)
+				),
+				_react2.default.createElement(
+					'div',
+					{
+						style: {
+							flex: '0 0 20%',
+							border: '2px black solid',
+							borderRadius: '3px',
+							margin: '3px',
+							padding: '3px'
+						}
+					},
+					_react2.default.createElement(
+						'h2',
+						null,
+						'Users'
+					),
+					_react2.default.createElement(
+						'div',
+						null,
+						users
 					)
 				)
 			);
@@ -38934,7 +38969,8 @@
 				var users = state.users;
 				users.push(action.data);
 				return Object.assign({}, state, {
-					users: users
+					users: users,
+					history: [].concat(_toConsumableArray(state.history), [{ message: action.data + ' has joined the room' }])
 				});
 			case 'USER_LEAVE':
 				var newUsers = state.users.filter(function (elem) {
@@ -38945,7 +38981,8 @@
 				});
 				return Object.assign({}, state, {
 					users: newUsers,
-					current: newCurrent
+					current: newCurrent,
+					history: [].concat(_toConsumableArray(state.history), [{ message: action.data + ' has heft the room' }])
 				});
 			case 'MESSAGE_SEND':
 				return Object.assign({}, state, {

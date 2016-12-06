@@ -18,7 +18,8 @@ export default function (state = defaultState, action) {
 			var users = state.users;
 			users.push(action.data);
 			return Object.assign({}, state, {
-				users: users
+				users: users,
+				history: [...state.history, {message: `${action.data} has joined the room`}]
 			});
 		case 'USER_LEAVE':
 			var newUsers = state.users.filter(function (elem) {
@@ -29,7 +30,8 @@ export default function (state = defaultState, action) {
 			});
 			return Object.assign({}, state, {
 				users: newUsers,
-				current: newCurrent
+				current: newCurrent,
+				history: [...state.history, {message: `${action.data} has heft the room`}]
 			});
 		case 'MESSAGE_SEND':
 			return Object.assign({}, state, {
