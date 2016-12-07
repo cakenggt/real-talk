@@ -64,10 +64,10 @@ export default function (state = defaultState, action) {
 				history: [...state.history, action.data]
 			});
 		case 'MESSAGE_CHANGE':
-			var key = keySounds[Math.floor(Math.random() * keySounds.length)];
-			console.log('playing');
-			console.log(key);
-			key.play();
+			if (!document.hidden) {
+				var key = keySounds[Math.floor(Math.random() * keySounds.length)];
+				key.play();
+			}
 			return Object.assign({}, state, {
 				users: state.users.map(elem => {
 					if (elem.user === action.data.user) {
