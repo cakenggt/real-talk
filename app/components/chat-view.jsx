@@ -52,7 +52,7 @@ var ChatView = React.createClass({
 			<div
 				style={{
 					display: 'flex',
-					height: '100%'
+					flex: '1'
 				}}
 				>
 				<div

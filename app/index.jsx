@@ -35,17 +35,39 @@ var mapStateToProps = state => {
 	};
 };
 
+var mapDispatchToProps = dispatch => {
+	return {
+		roomJoin: room => {
+			dispatch({
+				type: 'ROOM_JOIN',
+				data: room
+			});
+		}
+	};
+};
+
 var Index = connect(
-	mapStateToProps
+	mapStateToProps,
+	mapDispatchToProps
 )(React.createClass({
 	propTypes: {
 		chat: React.PropTypes.shape({
-			room: React.PropTypes.string
+			room: React.PropTypes.string,
+			username: React.PropTypes.string
 		}),
-		message: React.PropTypes.string
+		message: React.PropTypes.string,
+		roomJoin: React.PropTypes.func,
+		params: React.PropTypes.shape({
+			roomName: React.PropTypes.string
+		})
+	},
+	componentWillMount: function () {
+		if (this.props.params.roomName) {
+			this.props.roomJoin(this.props.params.roomName);
+		}
 	},
 	render: function () {
-		var view = this.props.chat.room ? <ChatView/> : <LoginView/>;
+		var view = this.props.chat.username ? <ChatView/> : <LoginView/>;
 		return (
 			<div
 				style={{
@@ -66,7 +88,8 @@ var Index = connect(
 				<div>{this.props.message}</div>
 				<div
 					style={{
-						flex: '1'
+						flex: '1',
+						display: 'flex'
 					}}
 					>
 					{view}
@@ -78,7 +101,7 @@ var Index = connect(
 
 var router = (
 	<Router history={browserHistory}>
-		<Route path="/" >
+		<Route path="/(room/:roomName)" >
 			<IndexRoute component={Index}/>
 		</Route>
 	</Router>

@@ -9,7 +9,7 @@ export default function (state = defaultState, action) {
 	switch (action.type) {
 		case 'SELF_JOIN':
 			return Object.assign({}, state, {
-				room: action.data.room,
+				room: action.data.room || state.room,
 				username: action.data.username,
 				users: action.data.users.map(elem => {
 					return {
@@ -17,6 +17,10 @@ export default function (state = defaultState, action) {
 						message: ''
 					};
 				})
+			});
+		case 'ROOM_JOIN':
+			return Object.assign({}, state, {
+				room: action.data
 			});
 		case 'USER_JOIN':
 			var users = state.users;
@@ -37,7 +41,7 @@ export default function (state = defaultState, action) {
 				history: [...state.history, {message: `${action.data} has heft the room`}]
 			});
 		case 'MESSAGE_SEND':
-			var snd = new Audio('audio/beep.mp3');
+			var snd = new Audio('/audio/beep.mp3');
 			snd.play();
 			return Object.assign({}, state, {
 				users: state.users.map(elem => {

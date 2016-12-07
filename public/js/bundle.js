@@ -108,17 +108,38 @@
 		};
 	};
 	
-	var Index = (0, _reactRedux.connect)(mapStateToProps)(_react2.default.createClass({
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+		return {
+			roomJoin: function roomJoin(room) {
+				dispatch({
+					type: 'ROOM_JOIN',
+					data: room
+				});
+			}
+		};
+	};
+	
+	var Index = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_react2.default.createClass({
 		displayName: 'Index',
 	
 		propTypes: {
 			chat: _react2.default.PropTypes.shape({
-				room: _react2.default.PropTypes.string
+				room: _react2.default.PropTypes.string,
+				username: _react2.default.PropTypes.string
 			}),
-			message: _react2.default.PropTypes.string
+			message: _react2.default.PropTypes.string,
+			roomJoin: _react2.default.PropTypes.func,
+			params: _react2.default.PropTypes.shape({
+				roomName: _react2.default.PropTypes.string
+			})
+		},
+		componentWillMount: function componentWillMount() {
+			if (this.props.params.roomName) {
+				this.props.roomJoin(this.props.params.roomName);
+			}
 		},
 		render: function render() {
-			var view = this.props.chat.room ? _react2.default.createElement(_chatView2.default, null) : _react2.default.createElement(_loginView2.default, null);
+			var view = this.props.chat.username ? _react2.default.createElement(_chatView2.default, null) : _react2.default.createElement(_loginView2.default, null);
 			return _react2.default.createElement(
 				'div',
 				{
@@ -150,7 +171,8 @@
 					'div',
 					{
 						style: {
-							flex: '1'
+							flex: '1',
+							display: 'flex'
 						}
 					},
 					view
@@ -164,7 +186,7 @@
 		{ history: _reactRouter.browserHistory },
 		_react2.default.createElement(
 			_reactRouter.Route,
-			{ path: '/' },
+			{ path: '/(room/:roomName)' },
 			_react2.default.createElement(_reactRouter.IndexRoute, { component: Index })
 		)
 	);
@@ -38697,7 +38719,7 @@
 				{
 					style: {
 						display: 'flex',
-						height: '100%'
+						flex: '1'
 					}
 				},
 				_react2.default.createElement(
@@ -38909,7 +38931,8 @@
 		displayName: 'LoginView',
 	
 		propTypes: {
-			join: _react2.default.PropTypes.func
+			join: _react2.default.PropTypes.func,
+			room: _react2.default.PropTypes.string
 		},
 		getInitialState: function getInitialState() {
 			return {
@@ -38918,12 +38941,24 @@
 			};
 		},
 		render: function render() {
+			var roomInput = this.props.room ? null : _react2.default.createElement('input', {
+				onChange: this.createChangeHandler('room'),
+				onKeyPress: this.handleKeyPress,
+				style: {
+					textAlign: 'center',
+					border: '2px black solid',
+					borderRadius: '3px',
+					margin: '3px'
+				},
+				placeholder: 'Room',
+				autoFocus: true
+			});
 			return _react2.default.createElement(
 				'div',
 				{
 					style: {
 						display: 'flex',
-						height: '100%',
+						flex: '1',
 						justifyContent: 'center',
 						alignItems: 'center'
 					}
@@ -38950,17 +38985,7 @@
 						_react2.default.createElement(
 							'div',
 							null,
-							_react2.default.createElement('input', {
-								onChange: this.createChangeHandler('room'),
-								onKeyPress: this.handleKeyPress,
-								style: {
-									textAlign: 'center',
-									border: '2px black solid',
-									borderRadius: '3px',
-									margin: '3px'
-								},
-								placeholder: 'Room'
-							})
+							roomInput
 						),
 						_react2.default.createElement(
 							'div',
@@ -38974,7 +38999,8 @@
 									borderRadius: '3px',
 									margin: '3px'
 								},
-								placeholder: 'Username'
+								placeholder: 'Username',
+								autoFocus: Boolean(this.props.room)
 							})
 						),
 						_react2.default.createElement(
@@ -38997,11 +39023,11 @@
 			);
 		},
 		handleJoin: function handleJoin() {
-			this.props.join(this.state.room, this.state.username);
+			this.props.join(this.state.room || this.props.room, this.state.username);
 		},
 		handleKeyPress: function handleKeyPress(e) {
 			if (e.key === 'Enter') {
-				this.props.join(this.state.room, this.state.username);
+				this.props.join(this.state.room || this.props.room, this.state.username);
 			}
 		},
 		createChangeHandler: function createChangeHandler(attr) {
@@ -39015,6 +39041,12 @@
 		}
 	});
 	
+	var mapStateToProps = function mapStateToProps(state) {
+		return {
+			room: state.chat.room
+		};
+	};
+	
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 		return {
 			join: function join(room, username) {
@@ -39023,7 +39055,7 @@
 		};
 	};
 	
-	exports.default = (0, _reactRedux.connect)(null, mapDispatchToProps)(LoginView);
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(LoginView);
 
 /***/ },
 /* 570 */
@@ -39045,7 +39077,7 @@
 		switch (action.type) {
 			case 'SELF_JOIN':
 				return Object.assign({}, state, {
-					room: action.data.room,
+					room: action.data.room || state.room,
 					username: action.data.username,
 					users: action.data.users.map(function (elem) {
 						return {
@@ -39053,6 +39085,10 @@
 							message: ''
 						};
 					})
+				});
+			case 'ROOM_JOIN':
+				return Object.assign({}, state, {
+					room: action.data
 				});
 			case 'USER_JOIN':
 				var users = state.users;
@@ -39073,7 +39109,7 @@
 					history: [].concat(_toConsumableArray(state.history), [{ message: action.data + ' has heft the room' }])
 				});
 			case 'MESSAGE_SEND':
-				var snd = new Audio('audio/beep.mp3');
+				var snd = new Audio('/audio/beep.mp3');
 				snd.play();
 				return Object.assign({}, state, {
 					users: state.users.map(function (elem) {

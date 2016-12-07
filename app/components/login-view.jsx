@@ -4,7 +4,8 @@ import {join} from '../actionCreators/chat-actions';
 
 var LoginView = React.createClass({
 	propTypes: {
-		join: React.PropTypes.func
+		join: React.PropTypes.func,
+		room: React.PropTypes.string
 	},
 	getInitialState: function () {
 		return {
@@ -13,11 +14,25 @@ var LoginView = React.createClass({
 		};
 	},
 	render: function () {
+		var roomInput = this.props.room ? null : (
+			<input
+				onChange={this.createChangeHandler('room')}
+				onKeyPress={this.handleKeyPress}
+				style={{
+					textAlign: 'center',
+					border: '2px black solid',
+					borderRadius: '3px',
+					margin: '3px'
+				}}
+				placeholder={'Room'}
+				autoFocus
+				/>
+		);
 		return (
 			<div
 				style={{
 					display: 'flex',
-					height: '100%',
+					flex: '1',
 					justifyContent: 'center',
 					alignItems: 'center'
 				}}
@@ -34,17 +49,7 @@ var LoginView = React.createClass({
 					<h2>Join Chat Room</h2>
 					<div>
 						<div>
-							<input
-								onChange={this.createChangeHandler('room')}
-								onKeyPress={this.handleKeyPress}
-								style={{
-									textAlign: 'center',
-									border: '2px black solid',
-									borderRadius: '3px',
-									margin: '3px'
-								}}
-								placeholder={'Room'}
-								/>
+							{roomInput}
 						</div>
 						<div>
 							<input
@@ -57,6 +62,7 @@ var LoginView = React.createClass({
 									margin: '3px'
 								}}
 								placeholder={'Username'}
+								autoFocus={Boolean(this.props.room)}
 								/>
 						</div>
 						<span
@@ -76,11 +82,11 @@ var LoginView = React.createClass({
 		);
 	},
 	handleJoin: function () {
-		this.props.join(this.state.room, this.state.username);
+		this.props.join(this.state.room || this.props.room, this.state.username);
 	},
 	handleKeyPress: function (e) {
 		if (e.key === 'Enter') {
-			this.props.join(this.state.room, this.state.username);
+			this.props.join(this.state.room || this.props.room, this.state.username);
 		}
 	},
 	createChangeHandler: function (attr) {
@@ -92,6 +98,12 @@ var LoginView = React.createClass({
 	}
 });
 
+var mapStateToProps = state => {
+	return {
+		room: state.chat.room
+	};
+};
+
 var mapDispatchToProps = dispatch => {
 	return {
 		join: function (room, username) {
@@ -101,6 +113,6 @@ var mapDispatchToProps = dispatch => {
 };
 
 export default connect(
-	null,
+	mapStateToProps,
 	mapDispatchToProps
 )(LoginView);
