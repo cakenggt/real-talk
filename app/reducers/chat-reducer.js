@@ -5,6 +5,16 @@ const defaultState = {
 	history: [] // {user: string, message: string}
 };
 
+const enterSound = new Audio('/audio/enter.wav');
+const keySounds = [
+	new Audio('/audio/key01.wav'),
+	new Audio('/audio/key02.wav'),
+	new Audio('/audio/key03.wav'),
+	new Audio('/audio/key04.wav'),
+	new Audio('/audio/key05.wav'),
+	new Audio('/audio/key06.wav')
+];
+
 export default function (state = defaultState, action) {
 	switch (action.type) {
 		case 'SELF_JOIN':
@@ -41,8 +51,7 @@ export default function (state = defaultState, action) {
 				history: [...state.history, {message: `${action.data} has heft the room`}]
 			});
 		case 'MESSAGE_SEND':
-			var snd = new Audio('/audio/beep.mp3');
-			snd.play();
+			enterSound.play();
 			return Object.assign({}, state, {
 				users: state.users.map(elem => {
 					if (elem.user === action.data.user) {
@@ -55,6 +64,10 @@ export default function (state = defaultState, action) {
 				history: [...state.history, action.data]
 			});
 		case 'MESSAGE_CHANGE':
+			var key = keySounds[Math.floor(Math.random() * keySounds.length)];
+			console.log('playing');
+			console.log(key);
+			key.play();
 			return Object.assign({}, state, {
 				users: state.users.map(elem => {
 					if (elem.user === action.data.user) {
