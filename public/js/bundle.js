@@ -148,7 +148,7 @@
 						height: '100%',
 						display: 'flex',
 						flexDirection: 'column',
-						fontFamily: 'Open Sans, sans-serif'
+						fontFamily: 'Playfair Display, serif'
 					}
 				},
 				_react2.default.createElement(
@@ -38762,7 +38762,10 @@
 								border: '2px black solid',
 								borderRadius: '3px',
 								margin: '3px',
-								flex: '1'
+								flex: '1',
+								padding: '6px',
+								fontFamily: 'Playfair Display, serif',
+								fontSize: '16px'
 							},
 							autoFocus: true
 						}),
@@ -38774,7 +38777,7 @@
 									color: 'white',
 									borderRadius: '3px',
 									margin: '3px',
-									padding: '3px'
+									padding: '6px'
 								},
 								onClick: this.handleClick
 							},
@@ -38796,7 +38799,12 @@
 					},
 					_react2.default.createElement(
 						'h2',
-						null,
+						{
+							style: {
+								fontFamily: 'Special Elite, cursive',
+								textAlign: 'center'
+							}
+						},
 						'Users'
 					),
 					_react2.default.createElement(
@@ -38950,7 +38958,9 @@
 					textAlign: 'center',
 					border: '2px black solid',
 					borderRadius: '3px',
-					margin: '3px'
+					margin: '3px',
+					fontFamily: 'Playfair Display, serif',
+					fontSize: '16px'
 				},
 				placeholder: 'Room',
 				autoFocus: true
@@ -38978,7 +38988,12 @@
 					},
 					_react2.default.createElement(
 						'h2',
-						null,
+						{
+							style: {
+								fontFamily: 'Special Elite, cursive',
+								textAlign: 'center'
+							}
+						},
 						'Join Chat Room'
 					),
 					_react2.default.createElement(
@@ -38999,7 +39014,9 @@
 									textAlign: 'center',
 									border: '2px black solid',
 									borderRadius: '3px',
-									margin: '3px'
+									margin: '3px',
+									fontFamily: 'Playfair Display, serif',
+									fontSize: '16px'
 								},
 								placeholder: 'Username',
 								autoFocus: Boolean(this.props.room)
@@ -39013,7 +39030,7 @@
 									color: 'white',
 									borderRadius: '3px',
 									margin: '3px',
-									padding: '3px',
+									padding: '6px',
 									display: 'inline-block'
 								},
 								onClick: this.handleJoin
@@ -39108,7 +39125,7 @@
 				});
 				return Object.assign({}, state, {
 					users: newUsers,
-					history: [].concat(_toConsumableArray(state.history), [{ message: action.data + ' has heft the room' }])
+					history: [].concat(_toConsumableArray(state.history), [{ message: action.data + ' has left the room' }])
 				});
 			case 'MESSAGE_SEND':
 				enterSound.play();

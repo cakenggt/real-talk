@@ -89,7 +89,10 @@ var ChatView = React.createClass({
 								border: '2px black solid',
 								borderRadius: '3px',
 								margin: '3px',
-								flex: '1'
+								flex: '1',
+								padding: '6px',
+								fontFamily: 'Playfair Display, serif',
+								fontSize: '16px'
 							}}
 							autoFocus
 							/>
@@ -99,7 +102,7 @@ var ChatView = React.createClass({
 								color: 'white',
 								borderRadius: '3px',
 								margin: '3px',
-								padding: '3px'
+								padding: '6px'
 							}}
 							onClick={this.handleClick}
 							>Send</span>
@@ -115,7 +118,12 @@ var ChatView = React.createClass({
 						wordBreak: 'break-word'
 					}}
 					>
-					<h2>Users</h2>
+					<h2
+						style={{
+							fontFamily: 'Special Elite, cursive',
+							textAlign: 'center'
+						}}
+						>Users</h2>
 					<div>
 						{users}
 					</div>

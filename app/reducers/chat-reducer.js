@@ -48,7 +48,7 @@ export default function (state = defaultState, action) {
 			});
 			return Object.assign({}, state, {
 				users: newUsers,
-				history: [...state.history, {message: `${action.data} has heft the room`}]
+				history: [...state.history, {message: `${action.data} has left the room`}]
 			});
 		case 'MESSAGE_SEND':
 			enterSound.play();

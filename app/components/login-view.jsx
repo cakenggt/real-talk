@@ -22,7 +22,9 @@ var LoginView = React.createClass({
 					textAlign: 'center',
 					border: '2px black solid',
 					borderRadius: '3px',
-					margin: '3px'
+					margin: '3px',
+					fontFamily: 'Playfair Display, serif',
+					fontSize: '16px'
 				}}
 				placeholder={'Room'}
 				autoFocus
@@ -46,7 +48,12 @@ var LoginView = React.createClass({
 						textAlign: 'center'
 					}}
 					>
-					<h2>Join Chat Room</h2>
+					<h2
+						style={{
+							fontFamily: 'Special Elite, cursive',
+							textAlign: 'center'
+						}}
+						>Join Chat Room</h2>
 					<div>
 						<div>
 							{roomInput}
@@ -59,7 +66,9 @@ var LoginView = React.createClass({
 									textAlign: 'center',
 									border: '2px black solid',
 									borderRadius: '3px',
-									margin: '3px'
+									margin: '3px',
+									fontFamily: 'Playfair Display, serif',
+									fontSize: '16px'
 								}}
 								placeholder={'Username'}
 								autoFocus={Boolean(this.props.room)}
@@ -71,7 +80,7 @@ var LoginView = React.createClass({
 								color: 'white',
 								borderRadius: '3px',
 								margin: '3px',
-								padding: '3px',
+								padding: '6px',
 								display: 'inline-block'
 							}}
 							onClick={this.handleJoin}

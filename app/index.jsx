@@ -75,7 +75,7 @@ var Index = connect(
 					height: '100%',
 					display: 'flex',
 					flexDirection: 'column',
-					fontFamily: 'Open Sans, sans-serif'
+					fontFamily: 'Playfair Display, serif'
 				}}
 				>
 				<h1
