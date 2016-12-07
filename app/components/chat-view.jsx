@@ -74,17 +74,34 @@ var ChatView = React.createClass({
 						>
 						{history}
 					</div>
-					<input
-						value={this.state.message}
-						onKeyPress={this.handleKeyPress}
-						onChange={this.handleChange}
+					<div
 						style={{
-							display: 'block',
-							border: '2px black solid',
-							borderRadius: '3px',
-							margin: '3px'
+							display: 'flex'
 						}}
-						/>
+						>
+						<input
+							value={this.state.message}
+							onKeyPress={this.handleKeyPress}
+							onChange={this.handleChange}
+							style={{
+								display: 'block',
+								border: '2px black solid',
+								borderRadius: '3px',
+								margin: '3px',
+								flex: '1'
+							}}
+							/>
+						<span
+							style={{
+								backgroundColor: 'black',
+								color: 'white',
+								borderRadius: '3px',
+								margin: '3px',
+								padding: '3px'
+							}}
+							onClick={this.handleClick}
+							>Send</span>
+					</div>
 				</div>
 				<div
 					style={{
@@ -104,11 +121,13 @@ var ChatView = React.createClass({
 		);
 	},
 	handleKeyPress: function (e) {
-		if (e.key === 'Enter') {
-			this.props.sendMessage(this.state.message);
-			this.setState({
-				message: ''
-			});
+		if (e.key === 'Enter' && this.state.message) {
+			this.sendMessage();
+		}
+	},
+	handleClick: function () {
+		if (this.state.message) {
+			this.sendMessage();
 		}
 	},
 	handleChange: function (e) {
@@ -116,6 +135,12 @@ var ChatView = React.createClass({
 			message: e.target.value
 		});
 		this.props.sendChange(e.target.value);
+	},
+	sendMessage: function () {
+		this.props.sendMessage(this.state.message);
+		this.setState({
+			message: ''
+		});
 	}
 });
 

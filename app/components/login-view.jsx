@@ -21,12 +21,14 @@ var LoginView = React.createClass({
 						Room:
 						<input
 							onChange={this.createChangeHandler('room')}
+							onKeyPress={this.handleKeyPress}
 							/>
 					</div>
 					<div>
 						Username:
 						<input
 							onChange={this.createChangeHandler('username')}
+							onKeyPress={this.handleKeyPress}
 							/>
 					</div>
 					<span
@@ -38,6 +40,11 @@ var LoginView = React.createClass({
 	},
 	handleJoin: function () {
 		this.props.join(this.state.room, this.state.username);
+	},
+	handleKeyPress: function (e) {
+		if (e.key === 'Enter') {
+			this.props.join(this.state.room, this.state.username);
+		}
 	},
 	createChangeHandler: function (attr) {
 		return e => {

@@ -38687,17 +38687,40 @@
 						},
 						history
 					),
-					_react2.default.createElement('input', {
-						value: this.state.message,
-						onKeyPress: this.handleKeyPress,
-						onChange: this.handleChange,
-						style: {
-							display: 'block',
-							border: '2px black solid',
-							borderRadius: '3px',
-							margin: '3px'
-						}
-					})
+					_react2.default.createElement(
+						'div',
+						{
+							style: {
+								display: 'flex'
+							}
+						},
+						_react2.default.createElement('input', {
+							value: this.state.message,
+							onKeyPress: this.handleKeyPress,
+							onChange: this.handleChange,
+							style: {
+								display: 'block',
+								border: '2px black solid',
+								borderRadius: '3px',
+								margin: '3px',
+								flex: '1'
+							}
+						}),
+						_react2.default.createElement(
+							'span',
+							{
+								style: {
+									backgroundColor: 'black',
+									color: 'white',
+									borderRadius: '3px',
+									margin: '3px',
+									padding: '3px'
+								},
+								onClick: this.handleClick
+							},
+							'Send'
+						)
+					)
 				),
 				_react2.default.createElement(
 					'div',
@@ -38724,11 +38747,13 @@
 			);
 		},
 		handleKeyPress: function handleKeyPress(e) {
-			if (e.key === 'Enter') {
-				this.props.sendMessage(this.state.message);
-				this.setState({
-					message: ''
-				});
+			if (e.key === 'Enter' && this.state.message) {
+				this.sendMessage();
+			}
+		},
+		handleClick: function handleClick() {
+			if (this.state.message) {
+				this.sendMessage();
 			}
 		},
 		handleChange: function handleChange(e) {
@@ -38736,6 +38761,12 @@
 				message: e.target.value
 			});
 			this.props.sendChange(e.target.value);
+		},
+		sendMessage: function sendMessage() {
+			this.props.sendMessage(this.state.message);
+			this.setState({
+				message: ''
+			});
 		}
 	});
 	
@@ -38866,7 +38897,8 @@
 						null,
 						'Room:',
 						_react2.default.createElement('input', {
-							onChange: this.createChangeHandler('room')
+							onChange: this.createChangeHandler('room'),
+							onKeyPress: this.handleKeyPress
 						})
 					),
 					_react2.default.createElement(
@@ -38874,7 +38906,8 @@
 						null,
 						'Username:',
 						_react2.default.createElement('input', {
-							onChange: this.createChangeHandler('username')
+							onChange: this.createChangeHandler('username'),
+							onKeyPress: this.handleKeyPress
 						})
 					),
 					_react2.default.createElement(
@@ -38889,6 +38922,11 @@
 		},
 		handleJoin: function handleJoin() {
 			this.props.join(this.state.room, this.state.username);
+		},
+		handleKeyPress: function handleKeyPress(e) {
+			if (e.key === 'Enter') {
+				this.props.join(this.state.room, this.state.username);
+			}
 		},
 		createChangeHandler: function createChangeHandler(attr) {
 			var _this = this;
