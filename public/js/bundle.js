@@ -83,20 +83,28 @@
 	
 	var _chatReducer2 = _interopRequireDefault(_chatReducer);
 	
+	var _messageReducer = __webpack_require__(/*! ./reducers/message-reducer */ 571);
+	
+	var _messageReducer2 = _interopRequireDefault(_messageReducer);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	// eslint-disable-line import/no-unassigned-import
-	var socket = io(); /* global io */
+	/* global io */
+	
+	var socket = io(); // eslint-disable-line import/no-unassigned-import
+	
 	
 	var reducer = (0, _redux.combineReducers)({
-		chat: _chatReducer2.default
+		chat: _chatReducer2.default,
+		message: _messageReducer2.default
 	});
 	
 	var store = (0, _redux.createStore)(reducer, (0, _redux.applyMiddleware)(_reduxThunk2.default, (0, _reduxSocket2.default)(socket, 'server/')));
 	
 	var mapStateToProps = function mapStateToProps(state) {
 		return {
-			chat: state.chat
+			chat: state.chat,
+			message: state.message
 		};
 	};
 	
@@ -106,7 +114,8 @@
 		propTypes: {
 			chat: _react2.default.PropTypes.shape({
 				room: _react2.default.PropTypes.string
-			})
+			}),
+			message: _react2.default.PropTypes.string
 		},
 		render: function render() {
 			var view = this.props.chat.room ? _react2.default.createElement(_chatView2.default, null) : _react2.default.createElement(_loginView2.default, null);
@@ -115,10 +124,37 @@
 				{
 					style: {
 						minWidth: '600px',
-						height: '100%'
+						height: '100%',
+						display: 'flex',
+						flexDirection: 'column',
+						fontFamily: 'Open Sans, sans-serif'
 					}
 				},
-				view
+				_react2.default.createElement(
+					'h1',
+					{
+						style: {
+							fontFamily: 'Special Elite, cursive',
+							textAlign: 'center',
+							flex: '0'
+						}
+					},
+					'Real Talk'
+				),
+				_react2.default.createElement(
+					'div',
+					null,
+					this.props.message
+				),
+				_react2.default.createElement(
+					'div',
+					{
+						style: {
+							flex: '1'
+						}
+					},
+					view
+				)
 			);
 		}
 	}));
@@ -38704,7 +38740,8 @@
 								borderRadius: '3px',
 								margin: '3px',
 								flex: '1'
-							}
+							},
+							autoFocus: true
 						}),
 						_react2.default.createElement(
 							'span',
@@ -38883,39 +38920,78 @@
 		render: function render() {
 			return _react2.default.createElement(
 				'div',
-				null,
-				_react2.default.createElement(
-					'h2',
-					null,
-					'Join Chat Room'
-				),
+				{
+					style: {
+						display: 'flex',
+						height: '100%',
+						justifyContent: 'center',
+						alignItems: 'center'
+					}
+				},
 				_react2.default.createElement(
 					'div',
-					null,
+					{
+						style: {
+							border: '2px black solid',
+							borderRadius: '3px',
+							margin: '3px',
+							padding: '3px',
+							textAlign: 'center'
+						}
+					},
 					_react2.default.createElement(
-						'div',
+						'h2',
 						null,
-						'Room:',
-						_react2.default.createElement('input', {
-							onChange: this.createChangeHandler('room'),
-							onKeyPress: this.handleKeyPress
-						})
+						'Join Chat Room'
 					),
 					_react2.default.createElement(
 						'div',
 						null,
-						'Username:',
-						_react2.default.createElement('input', {
-							onChange: this.createChangeHandler('username'),
-							onKeyPress: this.handleKeyPress
-						})
-					),
-					_react2.default.createElement(
-						'span',
-						{
-							onClick: this.handleJoin
-						},
-						'Join'
+						_react2.default.createElement(
+							'div',
+							null,
+							_react2.default.createElement('input', {
+								onChange: this.createChangeHandler('room'),
+								onKeyPress: this.handleKeyPress,
+								style: {
+									textAlign: 'center',
+									border: '2px black solid',
+									borderRadius: '3px',
+									margin: '3px'
+								},
+								placeholder: 'Room'
+							})
+						),
+						_react2.default.createElement(
+							'div',
+							null,
+							_react2.default.createElement('input', {
+								onChange: this.createChangeHandler('username'),
+								onKeyPress: this.handleKeyPress,
+								style: {
+									textAlign: 'center',
+									border: '2px black solid',
+									borderRadius: '3px',
+									margin: '3px'
+								},
+								placeholder: 'Username'
+							})
+						),
+						_react2.default.createElement(
+							'span',
+							{
+								style: {
+									backgroundColor: 'black',
+									color: 'white',
+									borderRadius: '3px',
+									margin: '3px',
+									padding: '3px',
+									display: 'inline-block'
+								},
+								onClick: this.handleJoin
+							},
+							'Join'
+						)
 					)
 				)
 			);
@@ -39033,6 +39109,34 @@
 		username: '',
 		users: [], // {user: string, message: string}
 		history: [] // {user: string, message: string}
+	};
+
+/***/ },
+/* 571 */
+/*!*****************************************!*\
+  !*** ./app/reducers/message-reducer.js ***!
+  \*****************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	exports.default = function () {
+		var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+		var action = arguments[1];
+	
+		switch (action.type) {
+			case 'SELF_JOIN':
+				if (!action.data.username && !action.data.room) {
+					return 'This user already exists in the specified room';
+				}
+				return '';
+			default:
+				return state;
+		}
 	};
 
 /***/ }

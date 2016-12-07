@@ -14,26 +14,63 @@ var LoginView = React.createClass({
 	},
 	render: function () {
 		return (
-			<div>
-				<h2>Join Chat Room</h2>
-				<div>
+			<div
+				style={{
+					display: 'flex',
+					height: '100%',
+					justifyContent: 'center',
+					alignItems: 'center'
+				}}
+				>
+				<div
+					style={{
+						border: '2px black solid',
+						borderRadius: '3px',
+						margin: '3px',
+						padding: '3px',
+						textAlign: 'center'
+					}}
+					>
+					<h2>Join Chat Room</h2>
 					<div>
-						Room:
-						<input
-							onChange={this.createChangeHandler('room')}
-							onKeyPress={this.handleKeyPress}
-							/>
+						<div>
+							<input
+								onChange={this.createChangeHandler('room')}
+								onKeyPress={this.handleKeyPress}
+								style={{
+									textAlign: 'center',
+									border: '2px black solid',
+									borderRadius: '3px',
+									margin: '3px'
+								}}
+								placeholder={'Room'}
+								/>
+						</div>
+						<div>
+							<input
+								onChange={this.createChangeHandler('username')}
+								onKeyPress={this.handleKeyPress}
+								style={{
+									textAlign: 'center',
+									border: '2px black solid',
+									borderRadius: '3px',
+									margin: '3px'
+								}}
+								placeholder={'Username'}
+								/>
+						</div>
+						<span
+							style={{
+								backgroundColor: 'black',
+								color: 'white',
+								borderRadius: '3px',
+								margin: '3px',
+								padding: '3px',
+								display: 'inline-block'
+							}}
+							onClick={this.handleJoin}
+							>Join</span>
 					</div>
-					<div>
-						Username:
-						<input
-							onChange={this.createChangeHandler('username')}
-							onKeyPress={this.handleKeyPress}
-							/>
-					</div>
-					<span
-						onClick={this.handleJoin}
-						>Join</span>
 				</div>
 			</div>
 		);

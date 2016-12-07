@@ -11,11 +11,13 @@ import thunk from 'redux-thunk';
 import ChatView from './components/chat-view.jsx';
 import LoginView from './components/login-view.jsx';
 import chatReducer from './reducers/chat-reducer';
+import messageReducer from './reducers/message-reducer';
 
 let socket = io();
 
 var reducer = combineReducers({
-	chat: chatReducer
+	chat: chatReducer,
+	message: messageReducer
 });
 
 var store = createStore(
@@ -28,7 +30,8 @@ var store = createStore(
 
 var mapStateToProps = state => {
 	return {
-		chat: state.chat
+		chat: state.chat,
+		message: state.message
 	};
 };
 
@@ -38,7 +41,8 @@ var Index = connect(
 	propTypes: {
 		chat: React.PropTypes.shape({
 			room: React.PropTypes.string
-		})
+		}),
+		message: React.PropTypes.string
 	},
 	render: function () {
 		var view = this.props.chat.room ? <ChatView/> : <LoginView/>;
@@ -46,10 +50,27 @@ var Index = connect(
 			<div
 				style={{
 					minWidth: '600px',
-					height: '100%'
+					height: '100%',
+					display: 'flex',
+					flexDirection: 'column',
+					fontFamily: 'Open Sans, sans-serif'
 				}}
 				>
-				{view}
+				<h1
+					style={{
+						fontFamily: 'Special Elite, cursive',
+						textAlign: 'center',
+						flex: '0'
+					}}
+					>Real Talk</h1>
+				<div>{this.props.message}</div>
+				<div
+					style={{
+						flex: '1'
+					}}
+					>
+					{view}
+				</div>
 			</div>
 		);
 	}

@@ -90,6 +90,7 @@ var ChatView = React.createClass({
 								margin: '3px',
 								flex: '1'
 							}}
+							autoFocus
 							/>
 						<span
 							style={{
