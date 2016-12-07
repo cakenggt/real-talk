@@ -1,11 +1,13 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import {withRouter} from 'react-router';
 import {join} from '../actionCreators/chat-actions';
 
-var LoginView = React.createClass({
+var LoginView = withRouter(React.createClass({
 	propTypes: {
 		join: React.PropTypes.func,
-		room: React.PropTypes.string
+		room: React.PropTypes.string,
+		router: React.PropTypes.object
 	},
 	getInitialState: function () {
 		return {
@@ -91,12 +93,16 @@ var LoginView = React.createClass({
 		);
 	},
 	handleJoin: function () {
-		this.props.join(this.state.room || this.props.room, this.state.username);
+		this.join(this.state.room || this.props.room, this.state.username);
 	},
 	handleKeyPress: function (e) {
 		if (e.key === 'Enter') {
-			this.props.join(this.state.room || this.props.room, this.state.username);
+			this.join(this.state.room || this.props.room, this.state.username);
 		}
+	},
+	join: function (room, username) {
+		this.props.join(room, username);
+		this.props.router.replace('/room/' + room);
 	},
 	createChangeHandler: function (attr) {
 		return e => {
@@ -105,7 +111,7 @@ var LoginView = React.createClass({
 			this.setState(newState);
 		};
 	}
-});
+}));
 
 var mapStateToProps = state => {
 	return {

@@ -38933,16 +38933,19 @@
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 537);
 	
+	var _reactRouter = __webpack_require__(/*! react-router */ 328);
+	
 	var _chatActions = __webpack_require__(/*! ../actionCreators/chat-actions */ 568);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var LoginView = _react2.default.createClass({
+	var LoginView = (0, _reactRouter.withRouter)(_react2.default.createClass({
 		displayName: 'LoginView',
 	
 		propTypes: {
 			join: _react2.default.PropTypes.func,
-			room: _react2.default.PropTypes.string
+			room: _react2.default.PropTypes.string,
+			router: _react2.default.PropTypes.object
 		},
 		getInitialState: function getInitialState() {
 			return {
@@ -39042,12 +39045,16 @@
 			);
 		},
 		handleJoin: function handleJoin() {
-			this.props.join(this.state.room || this.props.room, this.state.username);
+			this.join(this.state.room || this.props.room, this.state.username);
 		},
 		handleKeyPress: function handleKeyPress(e) {
 			if (e.key === 'Enter') {
-				this.props.join(this.state.room || this.props.room, this.state.username);
+				this.join(this.state.room || this.props.room, this.state.username);
 			}
+		},
+		join: function join(room, username) {
+			this.props.join(room, username);
+			this.props.router.replace('/room/' + room);
 		},
 		createChangeHandler: function createChangeHandler(attr) {
 			var _this = this;
@@ -39058,7 +39065,7 @@
 				_this.setState(newState);
 			};
 		}
-	});
+	}));
 	
 	var mapStateToProps = function mapStateToProps(state) {
 		return {
