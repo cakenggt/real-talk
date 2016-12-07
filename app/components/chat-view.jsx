@@ -69,7 +69,8 @@ var ChatView = React.createClass({
 							margin: '3px',
 							padding: '3px',
 							overflowY: 'auto',
-							flex: '1'
+							flex: '1',
+							wordBreak: 'break-word'
 						}}
 						>
 						{history}
@@ -110,7 +111,8 @@ var ChatView = React.createClass({
 						border: '2px black solid',
 						borderRadius: '3px',
 						margin: '3px',
-						padding: '3px'
+						padding: '3px',
+						wordBreak: 'break-word'
 					}}
 					>
 					<h2>Users</h2>

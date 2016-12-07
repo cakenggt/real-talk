@@ -38740,7 +38740,8 @@
 								margin: '3px',
 								padding: '3px',
 								overflowY: 'auto',
-								flex: '1'
+								flex: '1',
+								wordBreak: 'break-word'
 							}
 						},
 						history
@@ -38789,7 +38790,8 @@
 							border: '2px black solid',
 							borderRadius: '3px',
 							margin: '3px',
-							padding: '3px'
+							padding: '3px',
+							wordBreak: 'break-word'
 						}
 					},
 					_react2.default.createElement(
