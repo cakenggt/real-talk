@@ -37,6 +37,8 @@ export default function (state = defaultState, action) {
 				history: [...state.history, {message: `${action.data} has heft the room`}]
 			});
 		case 'MESSAGE_SEND':
+			var snd = new Audio('audio/beep.mp3');
+			snd.play();
 			return Object.assign({}, state, {
 				users: state.users.map(elem => {
 					if (elem.user === action.data.user) {
