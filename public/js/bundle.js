@@ -39109,7 +39109,7 @@
 					history: [].concat(_toConsumableArray(state.history), [{ message: action.data + ' has heft the room' }])
 				});
 			case 'MESSAGE_SEND':
-				beepSound.play();
+				enterSound.play();
 				return Object.assign({}, state, {
 					users: state.users.map(function (elem) {
 						if (elem.user === action.data.user) {
@@ -39150,8 +39150,8 @@
 		history: [] // {user: string, message: string}
 	};
 	
-	var beepSound = new Audio('/audio/beep.mp3');
-	var keySounds = [new Audio('/audio/0.wav'), new Audio('/audio/1.wav'), new Audio('/audio/2.wav'), new Audio('/audio/3.wav'), new Audio('/audio/4.wav'), new Audio('/audio/5.wav'), new Audio('/audio/6.wav'), new Audio('/audio/7.wav'), new Audio('/audio/8.wav'), new Audio('/audio/9.wav')];
+	var enterSound = new Audio('/audio/enter.wav');
+	var keySounds = [new Audio('/audio/key01.wav'), new Audio('/audio/key02.wav'), new Audio('/audio/key03.wav'), new Audio('/audio/key04.wav'), new Audio('/audio/key05.wav'), new Audio('/audio/key06.wav')];
 
 /***/ },
 /* 571 */

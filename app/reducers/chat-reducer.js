@@ -5,18 +5,14 @@ const defaultState = {
 	history: [] // {user: string, message: string}
 };
 
-const beepSound = new Audio('/audio/beep.mp3');
+const enterSound = new Audio('/audio/enter.wav');
 const keySounds = [
-	new Audio('/audio/0.wav'),
-	new Audio('/audio/1.wav'),
-	new Audio('/audio/2.wav'),
-	new Audio('/audio/3.wav'),
-	new Audio('/audio/4.wav'),
-	new Audio('/audio/5.wav'),
-	new Audio('/audio/6.wav'),
-	new Audio('/audio/7.wav'),
-	new Audio('/audio/8.wav'),
-	new Audio('/audio/9.wav')
+	new Audio('/audio/key01.wav'),
+	new Audio('/audio/key02.wav'),
+	new Audio('/audio/key03.wav'),
+	new Audio('/audio/key04.wav'),
+	new Audio('/audio/key05.wav'),
+	new Audio('/audio/key06.wav')
 ];
 
 export default function (state = defaultState, action) {
@@ -55,7 +51,7 @@ export default function (state = defaultState, action) {
 				history: [...state.history, {message: `${action.data} has heft the room`}]
 			});
 		case 'MESSAGE_SEND':
-			beepSound.play();
+			enterSound.play();
 			return Object.assign({}, state, {
 				users: state.users.map(elem => {
 					if (elem.user === action.data.user) {
