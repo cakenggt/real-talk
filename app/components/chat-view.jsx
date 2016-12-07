@@ -8,8 +8,7 @@ var ChatView = React.createClass({
 			room: React.PropTypes.string,
 			username: React.PropTypes.string,
 			users: React.PropTypes.array,
-			history: React.PropTypes.array,
-			current: React.PropTypes.array
+			history: React.PropTypes.array
 		}),
 		sendChange: React.PropTypes.func,
 		sendMessage: React.PropTypes.func
@@ -24,85 +23,68 @@ var ChatView = React.createClass({
 			return (
 				<div
 					key={i}
+					style={{
+						padding: '2px'
+					}}
 					>
-					{elem}
+					{elem.user} <i>{elem.message}</i>
 				</div>
 			);
 		});
 		var history = this.props.chat.history.map(function (elem, i) {
-			var messageStyle = {};
+			var messageStyle = {
+				padding: '2px'
+			};
 			if (!elem.user) {
 				messageStyle.fontStyle = 'italic';
 			}
+			var username = elem.user ? elem.user + ' ' : '';
 			return (
 				<div
 					key={i}
+					style={messageStyle}
 					>
-					<span
-						style={{
-							fontStyle: 'bold'
-						}}
-						>
-						{elem.user}
-					</span>
-					<span
-						style={messageStyle}
-						>
-						{elem.message}
-					</span>
-				</div>
-			);
-		});
-		var current = this.props.chat.current.map(function (elem, i) {
-			return (
-				<div
-					key={i}
-					>
-					<div>
-						{elem.user}
-					</div>
-					<div>
-						{elem.message}
-					</div>
+					<strong>{username}</strong>{elem.message}
 				</div>
 			);
 		});
 		return (
 			<div
 				style={{
-					display: 'flex'
+					display: 'flex',
+					height: '100%'
 				}}
 				>
-
 				<div
 					style={{
 						flex: '1',
-						border: '2px black solid',
-						borderRadius: '3px',
-						margin: '3px',
-						padding: '3px'
+						flexDirection: 'column',
+						display: 'flex'
 					}}
 					>
-					<div>
-						<h2>History</h2>
-						<div>
-							{history}
-						</div>
+					<div
+						style={{
+							border: '2px black solid',
+							borderRadius: '3px',
+							margin: '3px',
+							padding: '3px',
+							overflowY: 'auto',
+							flex: '1'
+						}}
+						>
+						{history}
 					</div>
-					<div>
-						text goes here
-						<input
-							value={this.state.message}
-							onKeyPress={this.handleKeyPress}
-							onChange={this.handleChange}
-							/>
-					</div>
-					<div>
-						<h2>Current</h2>
-						<div>
-							{current}
-						</div>
-					</div>
+					<input
+						value={this.state.message}
+						onKeyPress={this.handleKeyPress}
+						onChange={this.handleChange}
+						style={{
+							display: 'block',
+							border: '2px black solid',
+							borderRadius: '3px',
+							margin: '3px'
+						}}
+						/>
 				</div>
 				<div
 					style={{

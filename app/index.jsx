@@ -46,7 +46,7 @@ var Index = connect(
 			<div
 				style={{
 					minWidth: '600px',
-					margin: '20px'
+					height: '100%'
 				}}
 				>
 				{view}

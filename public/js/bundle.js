@@ -115,7 +115,7 @@
 				{
 					style: {
 						minWidth: '600px',
-						margin: '20px'
+						height: '100%'
 					}
 				},
 				view
@@ -38605,8 +38605,7 @@
 				room: _react2.default.PropTypes.string,
 				username: _react2.default.PropTypes.string,
 				users: _react2.default.PropTypes.array,
-				history: _react2.default.PropTypes.array,
-				current: _react2.default.PropTypes.array
+				history: _react2.default.PropTypes.array
 			}),
 			sendChange: _react2.default.PropTypes.func,
 			sendMessage: _react2.default.PropTypes.func
@@ -38621,62 +38620,48 @@
 				return _react2.default.createElement(
 					'div',
 					{
-						key: i
+						key: i,
+						style: {
+							padding: '2px'
+						}
 					},
-					elem
+					elem.user,
+					' ',
+					_react2.default.createElement(
+						'i',
+						null,
+						elem.message
+					)
 				);
 			});
 			var history = this.props.chat.history.map(function (elem, i) {
-				var messageStyle = {};
+				var messageStyle = {
+					padding: '2px'
+				};
 				if (!elem.user) {
 					messageStyle.fontStyle = 'italic';
 				}
+				var username = elem.user ? elem.user + ' ' : '';
 				return _react2.default.createElement(
 					'div',
 					{
-						key: i
+						key: i,
+						style: messageStyle
 					},
 					_react2.default.createElement(
-						'span',
-						{
-							style: {
-								fontStyle: 'bold'
-							}
-						},
-						elem.user
-					),
-					_react2.default.createElement(
-						'span',
-						{
-							style: messageStyle
-						},
-						elem.message
-					)
-				);
-			});
-			var current = this.props.chat.current.map(function (elem, i) {
-				return _react2.default.createElement(
-					'div',
-					{
-						key: i
-					},
-					_react2.default.createElement(
-						'div',
+						'strong',
 						null,
-						elem.user
+						username
 					),
-					_react2.default.createElement(
-						'div',
-						null,
-						elem.message
-					)
+					elem.message
 				);
 			});
 			return _react2.default.createElement(
 				'div',
 				{
 					style: {
-						display: 'flex'
+						display: 'flex',
+						height: '100%'
 					}
 				},
 				_react2.default.createElement(
@@ -38684,50 +38669,35 @@
 					{
 						style: {
 							flex: '1',
-							border: '2px black solid',
-							borderRadius: '3px',
-							margin: '3px',
-							padding: '3px'
+							flexDirection: 'column',
+							display: 'flex'
 						}
 					},
 					_react2.default.createElement(
 						'div',
-						null,
-						_react2.default.createElement(
-							'h2',
-							null,
-							'History'
-						),
-						_react2.default.createElement(
-							'div',
-							null,
-							history
-						)
+						{
+							style: {
+								border: '2px black solid',
+								borderRadius: '3px',
+								margin: '3px',
+								padding: '3px',
+								overflowY: 'auto',
+								flex: '1'
+							}
+						},
+						history
 					),
-					_react2.default.createElement(
-						'div',
-						null,
-						'text goes here',
-						_react2.default.createElement('input', {
-							value: this.state.message,
-							onKeyPress: this.handleKeyPress,
-							onChange: this.handleChange
-						})
-					),
-					_react2.default.createElement(
-						'div',
-						null,
-						_react2.default.createElement(
-							'h2',
-							null,
-							'Current'
-						),
-						_react2.default.createElement(
-							'div',
-							null,
-							current
-						)
-					)
+					_react2.default.createElement('input', {
+						value: this.state.message,
+						onKeyPress: this.handleKeyPress,
+						onChange: this.handleChange,
+						style: {
+							display: 'block',
+							border: '2px black solid',
+							borderRadius: '3px',
+							margin: '3px'
+						}
+					})
 				),
 				_react2.default.createElement(
 					'div',
@@ -38963,50 +38933,53 @@
 				return Object.assign({}, state, {
 					room: action.data.room,
 					username: action.data.username,
-					users: action.data.users
+					users: action.data.users.map(function (elem) {
+						return {
+							user: elem,
+							message: ''
+						};
+					})
 				});
 			case 'USER_JOIN':
 				var users = state.users;
-				users.push(action.data);
+				users.push({
+					user: action.data,
+					message: ''
+				});
 				return Object.assign({}, state, {
 					users: users,
 					history: [].concat(_toConsumableArray(state.history), [{ message: action.data + ' has joined the room' }])
 				});
 			case 'USER_LEAVE':
 				var newUsers = state.users.filter(function (elem) {
-					return elem !== action.data;
-				});
-				var newCurrent = state.current.filter(function (elem) {
 					return elem.user !== action.data;
 				});
 				return Object.assign({}, state, {
 					users: newUsers,
-					current: newCurrent,
 					history: [].concat(_toConsumableArray(state.history), [{ message: action.data + ' has heft the room' }])
 				});
 			case 'MESSAGE_SEND':
 				return Object.assign({}, state, {
-					current: state.current.filter(function (elem) {
-						return elem.user !== action.data.user;
+					users: state.users.map(function (elem) {
+						if (elem.user === action.data.user) {
+							return Object.assign({}, elem, {
+								message: ''
+							});
+						}
+						return elem;
 					}),
 					history: [].concat(_toConsumableArray(state.history), [action.data])
 				});
 			case 'MESSAGE_CHANGE':
-				var isIncluded = false;
-				var changeCurrent = state.current.map(function (elem) {
-					if (elem.user === action.data.user) {
-						isIncluded = true;
-						return Object.assign({}, elem, {
-							message: action.data.message
-						});
-					}
-					return elem;
-				});
-				if (!isIncluded) {
-					changeCurrent.push(action.data);
-				}
 				return Object.assign({}, state, {
-					current: changeCurrent
+					users: state.users.map(function (elem) {
+						if (elem.user === action.data.user) {
+							return Object.assign({}, elem, {
+								message: action.data.message
+							});
+						}
+						return elem;
+					})
 				});
 			default:
 				return state;
@@ -39018,9 +38991,8 @@
 	var defaultState = {
 		room: '',
 		username: '',
-		users: [],
-		history: [], // {user: string, message: string}
-		current: [] // {user: string, message: string}
+		users: [], // {user: string, message: string}
+		history: [] // {user: string, message: string}
 	};
 
 /***/ }

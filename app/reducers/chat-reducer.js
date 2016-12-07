@@ -1,9 +1,8 @@
 const defaultState = {
 	room: '',
 	username: '',
-	users: [],
-	history: [], // {user: string, message: string}
-	current: [] // {user: string, message: string}
+	users: [], // {user: string, message: string}
+	history: [] // {user: string, message: string}
 };
 
 export default function (state = defaultState, action) {
@@ -12,50 +11,53 @@ export default function (state = defaultState, action) {
 			return Object.assign({}, state, {
 				room: action.data.room,
 				username: action.data.username,
-				users: action.data.users
+				users: action.data.users.map(elem => {
+					return {
+						user: elem,
+						message: ''
+					};
+				})
 			});
 		case 'USER_JOIN':
 			var users = state.users;
-			users.push(action.data);
+			users.push({
+				user: action.data,
+				message: ''
+			});
 			return Object.assign({}, state, {
 				users: users,
 				history: [...state.history, {message: `${action.data} has joined the room`}]
 			});
 		case 'USER_LEAVE':
-			var newUsers = state.users.filter(function (elem) {
-				return elem !== action.data;
-			});
-			var newCurrent = state.current.filter(function (elem) {
+			var newUsers = state.users.filter(elem => {
 				return elem.user !== action.data;
 			});
 			return Object.assign({}, state, {
 				users: newUsers,
-				current: newCurrent,
 				history: [...state.history, {message: `${action.data} has heft the room`}]
 			});
 		case 'MESSAGE_SEND':
 			return Object.assign({}, state, {
-				current: state.current.filter(elem => {
-					return elem.user !== action.data.user;
+				users: state.users.map(elem => {
+					if (elem.user === action.data.user) {
+						return Object.assign({}, elem, {
+							message: ''
+						});
+					}
+					return elem;
 				}),
 				history: [...state.history, action.data]
 			});
 		case 'MESSAGE_CHANGE':
-			var isIncluded = false;
-			var changeCurrent = state.current.map(elem => {
-				if (elem.user === action.data.user) {
-					isIncluded = true;
-					return Object.assign({}, elem, {
-						message: action.data.message
-					});
-				}
-				return elem;
-			});
-			if (!isIncluded) {
-				changeCurrent.push(action.data);
-			}
 			return Object.assign({}, state, {
-				current: changeCurrent
+				users: state.users.map(elem => {
+					if (elem.user === action.data.user) {
+						return Object.assign({}, elem, {
+							message: action.data.message
+						});
+					}
+					return elem;
+				})
 			});
 		default:
 			return state;
