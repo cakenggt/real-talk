@@ -5,11 +5,11 @@ import {join, sendChange, sendMessage} from '../actionCreators/chat-actions';
 var ChatView = React.createClass({
 	propTypes: {
 		chat: React.PropTypes.shape({
-			room: React.PropTypes.string,
+			room: React.PropTypes.string.isRequired,
 			username: React.PropTypes.string,
 			users: React.PropTypes.array,
 			history: React.PropTypes.array
-		}),
+		}).isRequired,
 		sendChange: React.PropTypes.func,
 		sendMessage: React.PropTypes.func
 	},
@@ -17,6 +17,9 @@ var ChatView = React.createClass({
 		return {
 			message: ''
 		};
+	},
+	componentDidMount: function () {
+		document.title = 'Real Talk: ' + this.props.chat.room;
 	},
 	render: function () {
 		var users = this.props.chat.users.map(function (elem, i) {

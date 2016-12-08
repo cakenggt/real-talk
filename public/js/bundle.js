@@ -38645,11 +38645,11 @@
 	
 		propTypes: {
 			chat: _react2.default.PropTypes.shape({
-				room: _react2.default.PropTypes.string,
+				room: _react2.default.PropTypes.string.isRequired,
 				username: _react2.default.PropTypes.string,
 				users: _react2.default.PropTypes.array,
 				history: _react2.default.PropTypes.array
-			}),
+			}).isRequired,
 			sendChange: _react2.default.PropTypes.func,
 			sendMessage: _react2.default.PropTypes.func
 		},
@@ -38657,6 +38657,9 @@
 			return {
 				message: ''
 			};
+		},
+		componentDidMount: function componentDidMount() {
+			document.title = 'Real Talk: ' + this.props.chat.room;
 		},
 		render: function render() {
 			var users = this.props.chat.users.map(function (elem, i) {
