@@ -148,7 +148,7 @@
 						height: '100%',
 						display: 'flex',
 						flexDirection: 'column',
-						fontFamily: 'Playfair Display, serif'
+						fontFamily: 'Domine, serif'
 					}
 				},
 				_react2.default.createElement(
@@ -38764,7 +38764,7 @@
 								margin: '3px',
 								flex: '1',
 								padding: '6px',
-								fontFamily: 'Playfair Display, serif',
+								fontFamily: 'Domine, serif',
 								fontSize: '16px'
 							},
 							autoFocus: true
@@ -38962,7 +38962,7 @@
 					border: '2px black solid',
 					borderRadius: '3px',
 					margin: '3px',
-					fontFamily: 'Playfair Display, serif',
+					fontFamily: 'Domine, serif',
 					fontSize: '16px'
 				},
 				placeholder: 'Room',
@@ -39018,7 +39018,7 @@
 									border: '2px black solid',
 									borderRadius: '3px',
 									margin: '3px',
-									fontFamily: 'Playfair Display, serif',
+									fontFamily: 'Domine, serif',
 									fontSize: '16px'
 								},
 								placeholder: 'Username',

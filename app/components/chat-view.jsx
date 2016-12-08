@@ -91,7 +91,7 @@ var ChatView = React.createClass({
 								margin: '3px',
 								flex: '1',
 								padding: '6px',
-								fontFamily: 'Playfair Display, serif',
+								fontFamily: 'Domine, serif',
 								fontSize: '16px'
 							}}
 							autoFocus

@@ -25,7 +25,7 @@ var LoginView = withRouter(React.createClass({
 					border: '2px black solid',
 					borderRadius: '3px',
 					margin: '3px',
-					fontFamily: 'Playfair Display, serif',
+					fontFamily: 'Domine, serif',
 					fontSize: '16px'
 				}}
 				placeholder={'Room'}
@@ -69,7 +69,7 @@ var LoginView = withRouter(React.createClass({
 									border: '2px black solid',
 									borderRadius: '3px',
 									margin: '3px',
-									fontFamily: 'Playfair Display, serif',
+									fontFamily: 'Domine, serif',
 									fontSize: '16px'
 								}}
 								placeholder={'Username'}
