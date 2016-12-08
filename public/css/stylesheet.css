@@ -15,7 +15,6 @@ h1, h2 {
 }
 .small-flex {
 	display: flex;
-	flex: 0;
 }
 input {
 	border: 2px black solid;
@@ -32,6 +31,8 @@ input {
 	margin: 3px;
 	padding: 6px;
 	display: inline-block;
+	cursor: pointer;
+	user-select: none;
 }
 .bordered{
 	border: 2px black solid;

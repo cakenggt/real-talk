@@ -51,51 +51,59 @@ var ChatView = React.createClass({
 		return (
 			<div
 				className={'large-flex'}
+				style={{
+					flexDirection: 'column'
+				}}
 				>
+				<h2>Room: {this.props.chat.room}</h2>
 				<div
 					className={'large-flex'}
-					style={{
-						flexDirection: 'column'
-					}}
 					>
+					<div
+						className={'large-flex'}
+						style={{
+							flexDirection: 'column'
+						}}
+						>
+						<div
+							className={'bordered'}
+							style={{
+								overflowY: 'auto',
+								flex: '1',
+								wordBreak: 'break-word'
+							}}
+							>
+							{history}
+						</div>
+						<div
+							className={'small-flex'}
+							>
+							<input
+								value={this.state.message}
+								onKeyPress={this.handleKeyPress}
+								onChange={this.handleChange}
+								style={{
+									flex: '1'
+								}}
+								autoFocus
+								/>
+							<span
+								className={'btn'}
+								onClick={this.handleClick}
+								>Send</span>
+						</div>
+					</div>
 					<div
 						className={'bordered'}
 						style={{
-							overflowY: 'auto',
-							flex: '1',
+							flex: '0 0 20%',
 							wordBreak: 'break-word'
 						}}
 						>
-						{history}
-					</div>
-					<div
-						className={'small-flex'}
-						>
-						<input
-							value={this.state.message}
-							onKeyPress={this.handleKeyPress}
-							onChange={this.handleChange}
-							style={{
-								flex: '1'
-							}}
-							autoFocus
-							/>
-						<span
-							className={'btn'}
-							onClick={this.handleClick}
-							>Send</span>
-					</div>
-				</div>
-				<div
-					className={'bordered'}
-					style={{
-						flex: '0 0 20%',
-						wordBreak: 'break-word'
-					}}
-					>
-					<h2>Users</h2>
-					<div>
-						{users}
+						<h2>Users</h2>
+						<div>
+							{users}
+						</div>
 					</div>
 				</div>
 			</div>

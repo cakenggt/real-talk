@@ -38702,70 +38702,85 @@
 			return _react2.default.createElement(
 				'div',
 				{
-					className: 'large-flex'
+					className: 'large-flex',
+					style: {
+						flexDirection: 'column'
+					}
 				},
+				_react2.default.createElement(
+					'h2',
+					null,
+					'Room: ',
+					this.props.chat.room
+				),
 				_react2.default.createElement(
 					'div',
 					{
-						className: 'large-flex',
-						style: {
-							flexDirection: 'column'
-						}
+						className: 'large-flex'
 					},
+					_react2.default.createElement(
+						'div',
+						{
+							className: 'large-flex',
+							style: {
+								flexDirection: 'column'
+							}
+						},
+						_react2.default.createElement(
+							'div',
+							{
+								className: 'bordered',
+								style: {
+									overflowY: 'auto',
+									flex: '1',
+									wordBreak: 'break-word'
+								}
+							},
+							history
+						),
+						_react2.default.createElement(
+							'div',
+							{
+								className: 'small-flex'
+							},
+							_react2.default.createElement('input', {
+								value: this.state.message,
+								onKeyPress: this.handleKeyPress,
+								onChange: this.handleChange,
+								style: {
+									flex: '1'
+								},
+								autoFocus: true
+							}),
+							_react2.default.createElement(
+								'span',
+								{
+									className: 'btn',
+									onClick: this.handleClick
+								},
+								'Send'
+							)
+						)
+					),
 					_react2.default.createElement(
 						'div',
 						{
 							className: 'bordered',
 							style: {
-								overflowY: 'auto',
-								flex: '1',
+								flex: '0 0 20%',
 								wordBreak: 'break-word'
 							}
 						},
-						history
-					),
-					_react2.default.createElement(
-						'div',
-						{
-							className: 'small-flex'
-						},
-						_react2.default.createElement('input', {
-							value: this.state.message,
-							onKeyPress: this.handleKeyPress,
-							onChange: this.handleChange,
-							style: {
-								flex: '1'
-							},
-							autoFocus: true
-						}),
 						_react2.default.createElement(
-							'span',
-							{
-								className: 'btn',
-								onClick: this.handleClick
-							},
-							'Send'
+							'h2',
+							null,
+							'Users'
+						),
+						_react2.default.createElement(
+							'div',
+							null,
+							users
 						)
-					)
-				),
-				_react2.default.createElement(
-					'div',
-					{
-						className: 'bordered',
-						style: {
-							flex: '0 0 20%',
-							wordBreak: 'break-word'
-						}
-					},
-					_react2.default.createElement(
-						'h2',
-						null,
-						'Users'
-					),
-					_react2.default.createElement(
-						'div',
-						null,
-						users
 					)
 				)
 			);
