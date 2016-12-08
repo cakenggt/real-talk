@@ -143,23 +143,11 @@
 			return _react2.default.createElement(
 				'div',
 				{
-					style: {
-						minWidth: '600px',
-						height: '100%',
-						display: 'flex',
-						flexDirection: 'column',
-						fontFamily: 'Domine, serif'
-					}
+					className: 'container'
 				},
 				_react2.default.createElement(
 					'h1',
-					{
-						style: {
-							fontFamily: 'Special Elite, cursive',
-							textAlign: 'center',
-							flex: '0'
-						}
-					},
+					null,
 					'Real Talk'
 				),
 				_react2.default.createElement(
@@ -170,10 +158,7 @@
 				_react2.default.createElement(
 					'div',
 					{
-						style: {
-							flex: '1',
-							display: 'flex'
-						}
+						className: 'large-flex'
 					},
 					view
 				)
@@ -38717,28 +38702,21 @@
 			return _react2.default.createElement(
 				'div',
 				{
-					style: {
-						display: 'flex',
-						flex: '1'
-					}
+					className: 'large-flex'
 				},
 				_react2.default.createElement(
 					'div',
 					{
+						className: 'large-flex',
 						style: {
-							flex: '1',
-							flexDirection: 'column',
-							display: 'flex'
+							flexDirection: 'column'
 						}
 					},
 					_react2.default.createElement(
 						'div',
 						{
+							className: 'bordered',
 							style: {
-								border: '2px black solid',
-								borderRadius: '3px',
-								margin: '3px',
-								padding: '3px',
 								overflowY: 'auto',
 								flex: '1',
 								wordBreak: 'break-word'
@@ -38749,36 +38727,21 @@
 					_react2.default.createElement(
 						'div',
 						{
-							style: {
-								display: 'flex'
-							}
+							className: 'small-flex'
 						},
 						_react2.default.createElement('input', {
 							value: this.state.message,
 							onKeyPress: this.handleKeyPress,
 							onChange: this.handleChange,
 							style: {
-								display: 'block',
-								border: '2px black solid',
-								borderRadius: '3px',
-								margin: '3px',
-								flex: '1',
-								padding: '6px',
-								fontFamily: 'Domine, serif',
-								fontSize: '16px'
+								flex: '1'
 							},
 							autoFocus: true
 						}),
 						_react2.default.createElement(
 							'span',
 							{
-								style: {
-									backgroundColor: 'black',
-									color: 'white',
-									borderRadius: '3px',
-									margin: '3px',
-									padding: '6px'
-								},
+								className: 'btn',
 								onClick: this.handleClick
 							},
 							'Send'
@@ -38788,23 +38751,15 @@
 				_react2.default.createElement(
 					'div',
 					{
+						className: 'bordered',
 						style: {
 							flex: '0 0 20%',
-							border: '2px black solid',
-							borderRadius: '3px',
-							margin: '3px',
-							padding: '3px',
 							wordBreak: 'break-word'
 						}
 					},
 					_react2.default.createElement(
 						'h2',
-						{
-							style: {
-								fontFamily: 'Special Elite, cursive',
-								textAlign: 'center'
-							}
-						},
+						null,
 						'Users'
 					),
 					_react2.default.createElement(
@@ -38958,12 +38913,7 @@
 				onChange: this.createChangeHandler('room'),
 				onKeyPress: this.handleKeyPress,
 				style: {
-					textAlign: 'center',
-					border: '2px black solid',
-					borderRadius: '3px',
-					margin: '3px',
-					fontFamily: 'Domine, serif',
-					fontSize: '16px'
+					textAlign: 'center'
 				},
 				placeholder: 'Room',
 				autoFocus: true
@@ -38971,9 +38921,8 @@
 			return _react2.default.createElement(
 				'div',
 				{
+					className: 'large-flex',
 					style: {
-						display: 'flex',
-						flex: '1',
 						justifyContent: 'center',
 						alignItems: 'center'
 					}
@@ -38981,22 +38930,14 @@
 				_react2.default.createElement(
 					'div',
 					{
+						className: 'bordered',
 						style: {
-							border: '2px black solid',
-							borderRadius: '3px',
-							margin: '3px',
-							padding: '3px',
 							textAlign: 'center'
 						}
 					},
 					_react2.default.createElement(
 						'h2',
-						{
-							style: {
-								fontFamily: 'Special Elite, cursive',
-								textAlign: 'center'
-							}
-						},
+						null,
 						'Join Chat Room'
 					),
 					_react2.default.createElement(
@@ -39014,12 +38955,7 @@
 								onChange: this.createChangeHandler('username'),
 								onKeyPress: this.handleKeyPress,
 								style: {
-									textAlign: 'center',
-									border: '2px black solid',
-									borderRadius: '3px',
-									margin: '3px',
-									fontFamily: 'Domine, serif',
-									fontSize: '16px'
+									textAlign: 'center'
 								},
 								placeholder: 'Username',
 								autoFocus: Boolean(this.props.room)
@@ -39028,14 +38964,7 @@
 						_react2.default.createElement(
 							'span',
 							{
-								style: {
-									backgroundColor: 'black',
-									color: 'white',
-									borderRadius: '3px',
-									margin: '3px',
-									padding: '6px',
-									display: 'inline-block'
-								},
+								className: 'btn',
 								onClick: this.handleJoin
 							},
 							'Join'

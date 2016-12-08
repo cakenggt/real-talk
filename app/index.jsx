@@ -70,27 +70,12 @@ var Index = connect(
 		var view = this.props.chat.username ? <ChatView/> : <LoginView/>;
 		return (
 			<div
-				style={{
-					minWidth: '600px',
-					height: '100%',
-					display: 'flex',
-					flexDirection: 'column',
-					fontFamily: 'Domine, serif'
-				}}
+				className={'container'}
 				>
-				<h1
-					style={{
-						fontFamily: 'Special Elite, cursive',
-						textAlign: 'center',
-						flex: '0'
-					}}
-					>Real Talk</h1>
+				<h1>Real Talk</h1>
 				<div>{this.props.message}</div>
 				<div
-					style={{
-						flex: '1',
-						display: 'flex'
-					}}
+					className={'large-flex'}
 					>
 					{view}
 				</div>

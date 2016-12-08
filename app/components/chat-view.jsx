@@ -50,24 +50,17 @@ var ChatView = React.createClass({
 		});
 		return (
 			<div
-				style={{
-					display: 'flex',
-					flex: '1'
-				}}
+				className={'large-flex'}
 				>
 				<div
+					className={'large-flex'}
 					style={{
-						flex: '1',
-						flexDirection: 'column',
-						display: 'flex'
+						flexDirection: 'column'
 					}}
 					>
 					<div
+						className={'bordered'}
 						style={{
-							border: '2px black solid',
-							borderRadius: '3px',
-							margin: '3px',
-							padding: '3px',
 							overflowY: 'auto',
 							flex: '1',
 							wordBreak: 'break-word'
@@ -76,54 +69,31 @@ var ChatView = React.createClass({
 						{history}
 					</div>
 					<div
-						style={{
-							display: 'flex'
-						}}
+						className={'small-flex'}
 						>
 						<input
 							value={this.state.message}
 							onKeyPress={this.handleKeyPress}
 							onChange={this.handleChange}
 							style={{
-								display: 'block',
-								border: '2px black solid',
-								borderRadius: '3px',
-								margin: '3px',
-								flex: '1',
-								padding: '6px',
-								fontFamily: 'Domine, serif',
-								fontSize: '16px'
+								flex: '1'
 							}}
 							autoFocus
 							/>
 						<span
-							style={{
-								backgroundColor: 'black',
-								color: 'white',
-								borderRadius: '3px',
-								margin: '3px',
-								padding: '6px'
-							}}
+							className={'btn'}
 							onClick={this.handleClick}
 							>Send</span>
 					</div>
 				</div>
 				<div
+					className={'bordered'}
 					style={{
 						flex: '0 0 20%',
-						border: '2px black solid',
-						borderRadius: '3px',
-						margin: '3px',
-						padding: '3px',
 						wordBreak: 'break-word'
 					}}
 					>
-					<h2
-						style={{
-							fontFamily: 'Special Elite, cursive',
-							textAlign: 'center'
-						}}
-						>Users</h2>
+					<h2>Users</h2>
 					<div>
 						{users}
 					</div>
