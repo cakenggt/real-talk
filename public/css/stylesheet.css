@@ -50,3 +50,8 @@ input {
 		order: 1;
 	}
 }
+@media screen and (max-height: 500px) {
+	h1, h2 {
+		margin: 0px;
+	}
+}

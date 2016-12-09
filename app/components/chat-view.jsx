@@ -111,15 +111,19 @@ var ChatView = React.createClass({
 						</div>
 					</div>
 					<div
-						className={'bordered'}
+						className={'bordered large-flex'}
 						style={{
 							flex: '0 0 20%',
-							wordBreak: 'break-word'
+							wordBreak: 'break-word',
+							flexDirection: 'column'
 						}}
 						id={'user-list'}
 						>
 						<h2>Users</h2>
-						<div>
+						<div
+							style={{
+								overflowY: 'auto'
+							}}>
 							{users}
 						</div>
 					</div>

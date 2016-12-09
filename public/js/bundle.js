@@ -38689,10 +38689,11 @@
 					_react2.default.createElement(
 						'div',
 						{
-							className: 'bordered',
+							className: 'bordered large-flex',
 							style: {
 								flex: '0 0 20%',
-								wordBreak: 'break-word'
+								wordBreak: 'break-word',
+								flexDirection: 'column'
 							},
 							id: 'user-list'
 						},
@@ -38703,7 +38704,10 @@
 						),
 						_react2.default.createElement(
 							'div',
-							null,
+							{
+								style: {
+									overflowY: 'auto'
+								} },
 							users
 						)
 					)
