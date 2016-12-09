@@ -21,6 +21,18 @@ var ChatView = React.createClass({
 	componentDidMount: function () {
 		document.title = 'Real Talk: ' + this.props.chat.room;
 	},
+	componentDidUpdate: function(prevProps) {
+		if (this.props.chat.history.length > prevProps.chat.history.length){
+			var historyElement = document.querySelector('#history');
+			var scrollHeight = historyElement.scrollHeight;
+			var totalScrollHeight = scrollHeight - historyElement.clientHeight;
+			var scrolled = historyElement.scrollTop;
+			if (totalScrollHeight - scrolled < 50){
+				// if within 50 px of bottom, scroll down
+				historyElement.scrollTop = totalScrollHeight;
+			}
+		}
+	},
 	render: function () {
 		var users = this.props.chat.users.map(function (elem, i) {
 			return (
@@ -76,6 +88,7 @@ var ChatView = React.createClass({
 								flex: '1',
 								wordBreak: 'break-word'
 							}}
+							id={'history'}
 							>
 							{history}
 						</div>

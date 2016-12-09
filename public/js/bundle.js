@@ -38568,6 +38568,18 @@
 		componentDidMount: function componentDidMount() {
 			document.title = 'Real Talk: ' + this.props.chat.room;
 		},
+		componentDidUpdate: function componentDidUpdate(prevProps) {
+			if (this.props.chat.history.length > prevProps.chat.history.length) {
+				var historyElement = document.querySelector('#history');
+				var scrollHeight = historyElement.scrollHeight;
+				var totalScrollHeight = scrollHeight - historyElement.clientHeight;
+				var scrolled = historyElement.scrollTop;
+				if (totalScrollHeight - scrolled < 50) {
+					// if within 50 px of bottom, scroll down
+					historyElement.scrollTop = totalScrollHeight;
+				}
+			}
+		},
 		render: function render() {
 			var users = this.props.chat.users.map(function (elem, i) {
 				return _react2.default.createElement(
@@ -38645,7 +38657,8 @@
 									overflowY: 'auto',
 									flex: '1',
 									wordBreak: 'break-word'
-								}
+								},
+								id: 'history'
 							},
 							history
 						),
