@@ -67,6 +67,7 @@ var ChatView = React.createClass({
 						style={{
 							flexDirection: 'column'
 						}}
+						id={'chat-window'}
 						>
 						<div
 							className={'bordered'}
@@ -102,6 +103,7 @@ var ChatView = React.createClass({
 							flex: '0 0 20%',
 							wordBreak: 'break-word'
 						}}
+						id={'user-list'}
 						>
 						<h2>Users</h2>
 						<div>

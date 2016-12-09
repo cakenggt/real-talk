@@ -63,27 +63,27 @@
 	
 	var _redux = __webpack_require__(/*! redux */ 544);
 	
-	var _reduxThunk = __webpack_require__(/*! redux-thunk */ 566);
+	var _reduxThunk = __webpack_require__(/*! redux-thunk */ 565);
 	
 	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 	
-	var _chatView = __webpack_require__(/*! ./components/chat-view.jsx */ 567);
+	var _chatView = __webpack_require__(/*! ./components/chat-view.jsx */ 566);
 	
 	var _chatView2 = _interopRequireDefault(_chatView);
 	
-	var _loginView = __webpack_require__(/*! ./components/login-view.jsx */ 569);
+	var _loginView = __webpack_require__(/*! ./components/login-view.jsx */ 568);
 	
 	var _loginView2 = _interopRequireDefault(_loginView);
 	
-	var _chatReducer = __webpack_require__(/*! ./reducers/chat-reducer */ 570);
+	var _chatReducer = __webpack_require__(/*! ./reducers/chat-reducer */ 569);
 	
 	var _chatReducer2 = _interopRequireDefault(_chatReducer);
 	
-	var _messageReducer = __webpack_require__(/*! ./reducers/message-reducer */ 571);
+	var _messageReducer = __webpack_require__(/*! ./reducers/message-reducer */ 570);
 	
 	var _messageReducer2 = _interopRequireDefault(_messageReducer);
 	
-	var _socketListeners = __webpack_require__(/*! ./socket-listeners */ 572);
+	var _socketListeners = __webpack_require__(/*! ./socket-listeners */ 571);
 	
 	var _socketListeners2 = _interopRequireDefault(_socketListeners);
 	
@@ -38494,8 +38494,7 @@
 	}
 
 /***/ },
-/* 565 */,
-/* 566 */
+/* 565 */
 /*!************************************!*\
   !*** ./~/redux-thunk/lib/index.js ***!
   \************************************/
@@ -38526,7 +38525,7 @@
 	exports['default'] = thunk;
 
 /***/ },
-/* 567 */
+/* 566 */
 /*!**************************************!*\
   !*** ./app/components/chat-view.jsx ***!
   \**************************************/
@@ -38544,7 +38543,7 @@
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 537);
 	
-	var _chatActions = __webpack_require__(/*! ../actionCreators/chat-actions */ 568);
+	var _chatActions = __webpack_require__(/*! ../actionCreators/chat-actions */ 567);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -38635,7 +38634,8 @@
 							className: 'large-flex',
 							style: {
 								flexDirection: 'column'
-							}
+							},
+							id: 'chat-window'
 						},
 						_react2.default.createElement(
 							'div',
@@ -38680,7 +38680,8 @@
 							style: {
 								flex: '0 0 20%',
 								wordBreak: 'break-word'
-							}
+							},
+							id: 'user-list'
 						},
 						_react2.default.createElement(
 							'h2',
@@ -38743,7 +38744,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(ChatView);
 
 /***/ },
-/* 568 */
+/* 567 */
 /*!********************************************!*\
   !*** ./app/actionCreators/chat-actions.js ***!
   \********************************************/
@@ -38811,7 +38812,7 @@
 	}
 
 /***/ },
-/* 569 */
+/* 568 */
 /*!***************************************!*\
   !*** ./app/components/login-view.jsx ***!
   \***************************************/
@@ -38831,7 +38832,7 @@
 	
 	var _reactRouter = __webpack_require__(/*! react-router */ 328);
 	
-	var _chatActions = __webpack_require__(/*! ../actionCreators/chat-actions */ 568);
+	var _chatActions = __webpack_require__(/*! ../actionCreators/chat-actions */ 567);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -38954,7 +38955,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(LoginView);
 
 /***/ },
-/* 570 */
+/* 569 */
 /*!**************************************!*\
   !*** ./app/reducers/chat-reducer.js ***!
   \**************************************/
@@ -39050,7 +39051,7 @@
 	var keySounds = [new Audio('/audio/key01.wav'), new Audio('/audio/key02.wav'), new Audio('/audio/key03.wav'), new Audio('/audio/key04.wav'), new Audio('/audio/key05.wav'), new Audio('/audio/key06.wav')];
 
 /***/ },
-/* 571 */
+/* 570 */
 /*!*****************************************!*\
   !*** ./app/reducers/message-reducer.js ***!
   \*****************************************/
@@ -39078,7 +39079,7 @@
 	};
 
 /***/ },
-/* 572 */
+/* 571 */
 /*!*********************************!*\
   !*** ./app/socket-listeners.js ***!
   \*********************************/
@@ -39120,7 +39121,7 @@
 		});
 	};
 	
-	var _chatActions = __webpack_require__(/*! ./actionCreators/chat-actions */ 568);
+	var _chatActions = __webpack_require__(/*! ./actionCreators/chat-actions */ 567);
 
 /***/ }
 /******/ ]);
