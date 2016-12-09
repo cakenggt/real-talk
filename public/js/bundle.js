@@ -63,10 +63,6 @@
 	
 	var _redux = __webpack_require__(/*! redux */ 544);
 	
-	var _reduxSocket = __webpack_require__(/*! redux-socket.io */ 565);
-	
-	var _reduxSocket2 = _interopRequireDefault(_reduxSocket);
-	
 	var _reduxThunk = __webpack_require__(/*! redux-thunk */ 566);
 	
 	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
@@ -87,19 +83,21 @@
 	
 	var _messageReducer2 = _interopRequireDefault(_messageReducer);
 	
+	var _socketListeners = __webpack_require__(/*! ./socket-listeners */ 572);
+	
+	var _socketListeners2 = _interopRequireDefault(_socketListeners);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	/* global io */
-	
-	var socket = io(); // eslint-disable-line import/no-unassigned-import
-	
 	
 	var reducer = (0, _redux.combineReducers)({
 		chat: _chatReducer2.default,
 		message: _messageReducer2.default
-	});
+	}); // eslint-disable-line import/no-unassigned-import
 	
-	var store = (0, _redux.createStore)(reducer, (0, _redux.applyMiddleware)(_reduxThunk2.default, (0, _reduxSocket2.default)(socket, 'server/')));
+	
+	var store = (0, _redux.createStore)(reducer, (0, _redux.applyMiddleware)(_reduxThunk2.default));
+	
+	(0, _socketListeners2.default)(store.dispatch);
 	
 	var mapStateToProps = function mapStateToProps(state) {
 		return {
@@ -108,38 +106,14 @@
 		};
 	};
 	
-	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-		return {
-			roomJoin: function roomJoin(room) {
-				dispatch({
-					type: 'ROOM_JOIN',
-					data: room
-				});
-			}
-		};
-	};
-	
-	var Index = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_react2.default.createClass({
+	var Index = (0, _reactRedux.connect)(mapStateToProps)(_react2.default.createClass({
 		displayName: 'Index',
 	
 		propTypes: {
-			chat: _react2.default.PropTypes.shape({
-				room: _react2.default.PropTypes.string,
-				username: _react2.default.PropTypes.string
-			}),
 			message: _react2.default.PropTypes.string,
-			roomJoin: _react2.default.PropTypes.func,
-			params: _react2.default.PropTypes.shape({
-				roomName: _react2.default.PropTypes.string
-			})
-		},
-		componentWillMount: function componentWillMount() {
-			if (this.props.params.roomName) {
-				this.props.roomJoin(this.props.params.roomName);
-			}
+			children: _react2.default.PropTypes.object
 		},
 		render: function render() {
-			var view = this.props.chat.username ? _react2.default.createElement(_chatView2.default, null) : _react2.default.createElement(_loginView2.default, null);
 			return _react2.default.createElement(
 				'div',
 				{
@@ -160,19 +134,31 @@
 					{
 						className: 'large-flex'
 					},
-					view
+					this.props.children
 				)
 			);
 		}
 	}));
+	
+	var checkLogin = function checkLogin(nextState, replace) {
+		var state = store.getState();
+		if (!state.chat.username) {
+			store.dispatch({
+				type: 'ROOM_JOIN',
+				data: nextState.params.roomName
+			});
+			replace('/');
+		}
+	};
 	
 	var router = _react2.default.createElement(
 		_reactRouter.Router,
 		{ history: _reactRouter.browserHistory },
 		_react2.default.createElement(
 			_reactRouter.Route,
-			{ path: '/(room/:roomName)' },
-			_react2.default.createElement(_reactRouter.IndexRoute, { component: Index })
+			{ path: '/', component: Index },
+			_react2.default.createElement(_reactRouter.IndexRoute, { component: _loginView2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'room/:roomName', component: _chatView2.default, onEnter: checkLogin })
 		)
 	);
 	
@@ -38508,85 +38494,7 @@
 	}
 
 /***/ },
-/* 565 */
-/*!*****************************************!*\
-  !*** ./~/redux-socket.io/dist/index.js ***!
-  \*****************************************/
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = createSocketIoMiddleware;
-	
-	/**
-	* Allows you to register actions that when dispatched, send the action to the
-	* server via a socket.io socket.
-	* `criteria` may be a function (type, action) that returns true if you wish to send the
-	*  action to the server, array of action types, or a string prefix.
-	* the third parameter is an options object with the following properties:
-	* {
-	*   eventName,// a string name to use to send and receive actions from the server.
-	*   execute, // a function (action, emit, next, dispatch) that is responsible for
-	*            // sending the message to the server.
-	* }
-	*
-	*/
-	function createSocketIoMiddleware(socket) {
-	  var criteria = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
-	
-	  var _ref = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
-	      _ref$eventName = _ref.eventName,
-	      eventName = _ref$eventName === undefined ? 'action' : _ref$eventName,
-	      _ref$execute = _ref.execute,
-	      execute = _ref$execute === undefined ? defaultExecute : _ref$execute;
-	
-	  var emitBound = socket.emit.bind(socket);
-	  return function (_ref2) {
-	    var dispatch = _ref2.dispatch;
-	
-	    // Wire socket.io to dispatch actions sent by the server.
-	    socket.on(eventName, dispatch);
-	    return function (next) {
-	      return function (action) {
-	        if (evaluate(action, criteria)) {
-	          execute(action, emitBound, next, dispatch);
-	        } else {
-	          next(action);
-	        }
-	      };
-	    };
-	  };
-	
-	  function evaluate(action, option) {
-	    var type = action.type;
-	
-	    var matched = false;
-	    if (typeof option === 'function') {
-	      // Test function
-	      matched = option(type, action);
-	    } else if (typeof option === 'string') {
-	      // String prefix
-	      matched = type.indexOf(option) === 0;
-	    } else if (Array.isArray(option)) {
-	      // Array of types
-	      matched = option.some(function (item) {
-	        return type.indexOf(item) === 0;
-	      });
-	    }
-	    return matched;
-	  }
-	
-	  function defaultExecute(action, emit, next, dispatch) {
-	    // eslint-disable-line no-unused-vars
-	    emit(eventName, action);
-	    next(action);
-	  }
-	}
-
-/***/ },
+/* 565 */,
 /* 566 */
 /*!************************************!*\
   !*** ./~/redux-thunk/lib/index.js ***!
@@ -38839,44 +38747,59 @@
 /*!********************************************!*\
   !*** ./app/actionCreators/chat-actions.js ***!
   \********************************************/
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
+	exports.socket = undefined;
 	exports.join = join;
 	exports.sendChange = sendChange;
 	exports.sendMessage = sendMessage;
+	
+	var _reactRouter = __webpack_require__(/*! react-router */ 328);
+	
+	var socket = exports.socket = io(); /* global io */
 	function join(room, username) {
 		return function (dispatch) {
-			dispatch({
-				type: 'server/JOIN',
-				data: {
-					room: room,
-					username: username
+			socket.emit('JOIN', {
+				room: room,
+				username: username
+			}, function (success, users) {
+				if (success) {
+					dispatch({
+						type: 'SELF_JOIN',
+						data: {
+							room: room,
+							username: username,
+							users: users
+						}
+					});
+					_reactRouter.browserHistory.replace('/room/' + room);
+				} else {
+					dispatch({
+						type: 'SELF_JOIN',
+						data: {
+							users: []
+						}
+					});
 				}
 			});
 		};
 	}
 	
 	function sendChange(message) {
-		return function (dispatch) {
-			dispatch({
-				type: 'server/MESSAGE_CHANGE',
-				data: message
-			});
+		return function () {
+			socket.emit('MESSAGE_CHANGE', message);
 		};
 	}
 	
 	function sendMessage(message) {
 		return function (dispatch, getState) {
 			var state = getState();
-			dispatch({
-				type: 'server/MESSAGE_SEND',
-				data: message
-			});
+			socket.emit('MESSAGE_SEND', message);
 			dispatch({
 				type: 'MESSAGE_SEND',
 				data: {
@@ -39153,6 +39076,51 @@
 				return state;
 		}
 	};
+
+/***/ },
+/* 572 */
+/*!*********************************!*\
+  !*** ./app/socket-listeners.js ***!
+  \*********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	exports.default = function (dispatch) {
+		_chatActions.socket.on('USER_JOIN', function (data) {
+			dispatch({
+				type: 'USER_JOIN',
+				data: data
+			});
+		});
+	
+		_chatActions.socket.on('USER_LEAVE', function (data) {
+			dispatch({
+				type: 'USER_LEAVE',
+				data: data
+			});
+		});
+	
+		_chatActions.socket.on('MESSAGE_SEND', function (data) {
+			dispatch({
+				type: 'MESSAGE_SEND',
+				data: data
+			});
+		});
+	
+		_chatActions.socket.on('MESSAGE_CHANGE', function (data) {
+			dispatch({
+				type: 'MESSAGE_CHANGE',
+				data: data
+			});
+		});
+	};
+	
+	var _chatActions = __webpack_require__(/*! ./actionCreators/chat-actions */ 568);
 
 /***/ }
 /******/ ]);

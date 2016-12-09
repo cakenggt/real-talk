@@ -1,19 +1,15 @@
-/* global io */
-
 import 'babel-polyfill'; // eslint-disable-line import/no-unassigned-import
 import React from 'react';
 import {Router, Route, IndexRoute, browserHistory} from 'react-router';
 import {render} from 'react-dom';
 import {Provider, connect} from 'react-redux';
 import {createStore, combineReducers, applyMiddleware} from 'redux';
-import createSocketIoMiddleware from 'redux-socket.io';
 import thunk from 'redux-thunk';
 import ChatView from './components/chat-view.jsx';
 import LoginView from './components/login-view.jsx';
 import chatReducer from './reducers/chat-reducer';
 import messageReducer from './reducers/message-reducer';
-
-let socket = io();
+import addSocketListeners from './socket-listeners';
 
 var reducer = combineReducers({
 	chat: chatReducer,
@@ -23,10 +19,11 @@ var reducer = combineReducers({
 var store = createStore(
 	reducer,
 	applyMiddleware(
-		thunk,
-		createSocketIoMiddleware(socket, 'server/')
+		thunk
 	)
 );
+
+addSocketListeners(store.dispatch);
 
 var mapStateToProps = state => {
 	return {
@@ -35,39 +32,14 @@ var mapStateToProps = state => {
 	};
 };
 
-var mapDispatchToProps = dispatch => {
-	return {
-		roomJoin: room => {
-			dispatch({
-				type: 'ROOM_JOIN',
-				data: room
-			});
-		}
-	};
-};
-
 var Index = connect(
-	mapStateToProps,
-	mapDispatchToProps
+	mapStateToProps
 )(React.createClass({
 	propTypes: {
-		chat: React.PropTypes.shape({
-			room: React.PropTypes.string,
-			username: React.PropTypes.string
-		}),
 		message: React.PropTypes.string,
-		roomJoin: React.PropTypes.func,
-		params: React.PropTypes.shape({
-			roomName: React.PropTypes.string
-		})
-	},
-	componentWillMount: function () {
-		if (this.props.params.roomName) {
-			this.props.roomJoin(this.props.params.roomName);
-		}
+		children: React.PropTypes.object
 	},
 	render: function () {
-		var view = this.props.chat.username ? <ChatView/> : <LoginView/>;
 		return (
 			<div
 				className={'container'}
@@ -77,17 +49,29 @@ var Index = connect(
 				<div
 					className={'large-flex'}
 					>
-					{view}
+					{this.props.children}
 				</div>
 			</div>
 		);
 	}
 }));
 
+var checkLogin = (nextState, replace) => {
+	var state = store.getState();
+	if (!state.chat.username) {
+		store.dispatch({
+			type: 'ROOM_JOIN',
+			data: nextState.params.roomName
+		});
+		replace('/');
+	}
+};
+
 var router = (
 	<Router history={browserHistory}>
-		<Route path="/(room/:roomName)" >
-			<IndexRoute component={Index}/>
+		<Route path="/" component={Index}>
+			<IndexRoute component={LoginView}/>
+			<Route path="room/:roomName" component={ChatView} onEnter={checkLogin}/>
 		</Route>
 	</Router>
 );
