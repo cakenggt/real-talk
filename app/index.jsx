@@ -10,6 +10,7 @@ import LoginView from './components/login-view.jsx';
 import chatReducer from './reducers/chat-reducer';
 import messageReducer from './reducers/message-reducer';
 import addSocketListeners from './socket-listeners';
+import addDocumentListeners from './document-listeners';
 
 var reducer = combineReducers({
 	chat: chatReducer,
@@ -24,6 +25,8 @@ var store = createStore(
 );
 
 addSocketListeners(store.dispatch);
+
+addDocumentListeners(store.dispatch);
 
 var mapStateToProps = state => {
 	return {

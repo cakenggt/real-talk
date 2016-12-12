@@ -71,7 +71,7 @@
 	
 	var _chatView2 = _interopRequireDefault(_chatView);
 	
-	var _loginView = __webpack_require__(/*! ./components/login-view.jsx */ 568);
+	var _loginView = __webpack_require__(/*! ./components/login-view.jsx */ 567);
 	
 	var _loginView2 = _interopRequireDefault(_loginView);
 	
@@ -87,17 +87,23 @@
 	
 	var _socketListeners2 = _interopRequireDefault(_socketListeners);
 	
+	var _documentListeners = __webpack_require__(/*! ./document-listeners */ 572);
+	
+	var _documentListeners2 = _interopRequireDefault(_documentListeners);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
+	// eslint-disable-line import/no-unassigned-import
 	var reducer = (0, _redux.combineReducers)({
 		chat: _chatReducer2.default,
 		message: _messageReducer2.default
-	}); // eslint-disable-line import/no-unassigned-import
-	
+	});
 	
 	var store = (0, _redux.createStore)(reducer, (0, _redux.applyMiddleware)(_reduxThunk2.default));
 	
 	(0, _socketListeners2.default)(store.dispatch);
+	
+	(0, _documentListeners2.default)(store.dispatch);
 	
 	var mapStateToProps = function mapStateToProps(state) {
 		return {
@@ -38543,7 +38549,7 @@
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 537);
 	
-	var _chatActions = __webpack_require__(/*! ../actionCreators/chat-actions */ 567);
+	var _chatActions = __webpack_require__(/*! ../actionCreators/chat-actions */ 568);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -38582,6 +38588,10 @@
 		},
 		render: function render() {
 			var users = this.props.chat.users.map(function (elem, i) {
+				var userStyle = {
+					marginRight: '2px'
+				};
+				userStyle.textDecoration = elem.hidden ? 'line-through' : 'none';
 				return _react2.default.createElement(
 					'div',
 					{
@@ -38590,8 +38600,13 @@
 							padding: '2px'
 						}
 					},
-					elem.user,
-					' ',
+					_react2.default.createElement(
+						'span',
+						{
+							style: userStyle
+						},
+						elem.user
+					),
 					_react2.default.createElement(
 						'i',
 						null,
@@ -38762,74 +38777,6 @@
 
 /***/ },
 /* 567 */
-/*!********************************************!*\
-  !*** ./app/actionCreators/chat-actions.js ***!
-  \********************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	exports.socket = undefined;
-	exports.join = join;
-	exports.sendChange = sendChange;
-	exports.sendMessage = sendMessage;
-	
-	var _reactRouter = __webpack_require__(/*! react-router */ 328);
-	
-	var socket = exports.socket = io(); /* global io */
-	function join(room, username) {
-		return function (dispatch) {
-			socket.emit('JOIN', {
-				room: room,
-				username: username
-			}, function (success, users) {
-				if (success) {
-					dispatch({
-						type: 'SELF_JOIN',
-						data: {
-							room: room,
-							username: username,
-							users: users
-						}
-					});
-					_reactRouter.browserHistory.replace('/room/' + room);
-				} else {
-					dispatch({
-						type: 'SELF_JOIN',
-						data: {
-							users: []
-						}
-					});
-				}
-			});
-		};
-	}
-	
-	function sendChange(message) {
-		return function () {
-			socket.emit('MESSAGE_CHANGE', message);
-		};
-	}
-	
-	function sendMessage(message) {
-		return function (dispatch, getState) {
-			var state = getState();
-			socket.emit('MESSAGE_SEND', message);
-			dispatch({
-				type: 'MESSAGE_SEND',
-				data: {
-					user: state.chat.username,
-					message: message
-				}
-			});
-		};
-	}
-
-/***/ },
-/* 568 */
 /*!***************************************!*\
   !*** ./app/components/login-view.jsx ***!
   \***************************************/
@@ -38849,7 +38796,7 @@
 	
 	var _reactRouter = __webpack_require__(/*! react-router */ 328);
 	
-	var _chatActions = __webpack_require__(/*! ../actionCreators/chat-actions */ 567);
+	var _chatActions = __webpack_require__(/*! ../actionCreators/chat-actions */ 568);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -38972,6 +38919,81 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(LoginView);
 
 /***/ },
+/* 568 */
+/*!********************************************!*\
+  !*** ./app/actionCreators/chat-actions.js ***!
+  \********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.socket = undefined;
+	exports.join = join;
+	exports.sendChange = sendChange;
+	exports.sendMessage = sendMessage;
+	exports.sendVisibilityChange = sendVisibilityChange;
+	
+	var _reactRouter = __webpack_require__(/*! react-router */ 328);
+	
+	var socket = exports.socket = io(); /* global io */
+	function join(room, username) {
+		return function (dispatch) {
+			socket.emit('JOIN', {
+				room: room,
+				username: username
+			}, function (success, users) {
+				if (success) {
+					dispatch({
+						type: 'SELF_JOIN',
+						data: {
+							room: room,
+							username: username,
+							users: users
+						}
+					});
+					_reactRouter.browserHistory.replace('/room/' + room);
+				} else {
+					dispatch({
+						type: 'SELF_JOIN',
+						data: {
+							users: []
+						}
+					});
+				}
+			});
+		};
+	}
+	
+	function sendChange(message) {
+		return function () {
+			socket.emit('MESSAGE_CHANGE', message);
+		};
+	}
+	
+	function sendMessage(message) {
+		return function (dispatch, getState) {
+			var state = getState();
+			socket.emit('MESSAGE_SEND', message);
+			dispatch({
+				type: 'MESSAGE_SEND',
+				data: {
+					user: state.chat.username,
+					message: message
+				}
+			});
+		};
+	}
+	
+	function sendVisibilityChange(hidden) {
+		return function () {
+			socket.emit('VISIBILITY_CHANGE', hidden);
+		};
+	}
+
+/***/ },
 /* 569 */
 /*!**************************************!*\
   !*** ./app/reducers/chat-reducer.js ***!
@@ -38996,7 +39018,8 @@
 					users: action.data.users.map(function (elem) {
 						return {
 							user: elem,
-							message: ''
+							message: '',
+							hidden: false
 						};
 					})
 				});
@@ -39008,7 +39031,8 @@
 				var users = state.users;
 				users.push({
 					user: action.data,
-					message: ''
+					message: '',
+					hidden: false
 				});
 				return Object.assign({}, state, {
 					users: users,
@@ -39045,6 +39069,17 @@
 						if (elem.user === action.data.user) {
 							return Object.assign({}, elem, {
 								message: action.data.message
+							});
+						}
+						return elem;
+					})
+				});
+			case 'VISIBILITY_CHANGE':
+				return Object.assign({}, state, {
+					users: state.users.map(function (elem) {
+						if (elem.user === action.data.user) {
+							return Object.assign({}, elem, {
+								hidden: action.data.hidden
 							});
 						}
 						return elem;
@@ -39136,9 +39171,37 @@
 				data: data
 			});
 		});
+	
+		_chatActions.socket.on('VISIBILITY_CHANGE', function (data) {
+			dispatch({
+				type: 'VISIBILITY_CHANGE',
+				data: data
+			});
+		});
 	};
 	
-	var _chatActions = __webpack_require__(/*! ./actionCreators/chat-actions */ 567);
+	var _chatActions = __webpack_require__(/*! ./actionCreators/chat-actions */ 568);
+
+/***/ },
+/* 572 */
+/*!***********************************!*\
+  !*** ./app/document-listeners.js ***!
+  \***********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _chatActions = __webpack_require__(/*! ./actionCreators/chat-actions */ 568);
+	
+	exports.default = function (dispatch) {
+		document.addEventListener('visibilitychange', function () {
+			dispatch((0, _chatActions.sendVisibilityChange)(document.hidden));
+		});
+	};
 
 /***/ }
 /******/ ]);

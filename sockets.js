@@ -47,6 +47,13 @@ module.exports = function (options) {
 			});
 		});
 
+		socket.on('VISIBILITY_CHANGE', hidden => {
+			socket.broadcast.to(roomName).emit('VISIBILITY_CHANGE', {
+				user: userName,
+				hidden: hidden
+			});
+		});
+
 		socket.on('disconnect', function () {
 			var roomSet = roomMap[roomName];
 			if (roomSet) {

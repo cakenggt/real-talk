@@ -24,7 +24,8 @@ export default function (state = defaultState, action) {
 				users: action.data.users.map(elem => {
 					return {
 						user: elem,
-						message: ''
+						message: '',
+						hidden: false
 					};
 				})
 			});
@@ -36,7 +37,8 @@ export default function (state = defaultState, action) {
 			var users = state.users;
 			users.push({
 				user: action.data,
-				message: ''
+				message: '',
+				hidden: false
 			});
 			return Object.assign({}, state, {
 				users: users,
@@ -73,6 +75,17 @@ export default function (state = defaultState, action) {
 					if (elem.user === action.data.user) {
 						return Object.assign({}, elem, {
 							message: action.data.message
+						});
+					}
+					return elem;
+				})
+			});
+		case 'VISIBILITY_CHANGE':
+			return Object.assign({}, state, {
+				users: state.users.map(elem => {
+					if (elem.user === action.data.user) {
+						return Object.assign({}, elem, {
+							hidden: action.data.hidden
 						});
 					}
 					return elem;

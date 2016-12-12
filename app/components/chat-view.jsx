@@ -35,6 +35,10 @@ var ChatView = React.createClass({
 	},
 	render: function () {
 		var users = this.props.chat.users.map(function (elem, i) {
+			var userStyle = {
+				marginRight: '2px'
+			};
+			userStyle.textDecoration = elem.hidden ? 'line-through' : 'none';
 			return (
 				<div
 					key={i}
@@ -42,7 +46,12 @@ var ChatView = React.createClass({
 						padding: '2px'
 					}}
 					>
-					{elem.user} <i>{elem.message}</i>
+					<span
+						style={userStyle}
+						>
+						{elem.user}
+					</span>
+					<i>{elem.message}</i>
 				</div>
 			);
 		});

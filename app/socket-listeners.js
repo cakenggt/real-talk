@@ -28,4 +28,11 @@ export default function (dispatch) {
 			data: data
 		});
 	});
+
+	socket.on('VISIBILITY_CHANGE', data => {
+		dispatch({
+			type: 'VISIBILITY_CHANGE',
+			data: data
+		});
+	});
 }

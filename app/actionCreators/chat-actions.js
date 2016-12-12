@@ -50,3 +50,9 @@ export function sendMessage(message) {
 		});
 	};
 }
+
+export function sendVisibilityChange(hidden) {
+	return function () {
+		socket.emit('VISIBILITY_CHANGE', hidden);
+	};
+}
