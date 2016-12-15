@@ -1,6 +1,6 @@
-import {socket} from './actionCreators/chat-actions';
+import {socket, join} from './actionCreators/chat-actions';
 
-export default function (dispatch) {
+export default function (dispatch, getState) {
 	socket.on('USER_JOIN', data => {
 		dispatch({
 			type: 'USER_JOIN',
@@ -34,5 +34,12 @@ export default function (dispatch) {
 			type: 'VISIBILITY_CHANGE',
 			data: data
 		});
+	});
+
+	socket.on('reconnect', () => {
+		var state = getState();
+		if (state.chat.room && state.chat.username) {
+			dispatch(join(state.chat.room, state.chat.username));
+		}
 	});
 }

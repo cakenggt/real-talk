@@ -101,7 +101,7 @@
 	
 	var store = (0, _redux.createStore)(reducer, (0, _redux.applyMiddleware)(_reduxThunk2.default));
 	
-	(0, _socketListeners2.default)(store.dispatch);
+	(0, _socketListeners2.default)(store.dispatch, store.getState);
 	
 	(0, _documentListeners2.default)(store.dispatch);
 	
@@ -39148,7 +39148,7 @@
 		value: true
 	});
 	
-	exports.default = function (dispatch) {
+	exports.default = function (dispatch, getState) {
 		_chatActions.socket.on('USER_JOIN', function (data) {
 			dispatch({
 				type: 'USER_JOIN',
@@ -39182,6 +39182,13 @@
 				type: 'VISIBILITY_CHANGE',
 				data: data
 			});
+		});
+	
+		_chatActions.socket.on('reconnect', function () {
+			var state = getState();
+			if (state.chat.room && state.chat.username) {
+				dispatch((0, _chatActions.join)(state.chat.room, state.chat.username));
+			}
 		});
 	};
 	

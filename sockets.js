@@ -17,6 +17,10 @@ module.exports = function (options) {
 			var room = data.room;
 			var username = data.username;
 			var roomSet = roomMap[room];
+			if (!username){
+				fn('Invalid username');
+				return;
+			}
 			if (room && (!roomSet || !roomSet.has(username))) {
 				if (!roomSet) {
 					roomSet = new Set();

@@ -24,7 +24,7 @@ var store = createStore(
 	)
 );
 
-addSocketListeners(store.dispatch);
+addSocketListeners(store.dispatch, store.getState);
 
 addDocumentListeners(store.dispatch);
 
