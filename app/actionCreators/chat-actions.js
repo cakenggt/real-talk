@@ -8,8 +8,8 @@ export function join(room, username) {
 		socket.emit('JOIN', {
 			room: room,
 			username: username
-		}, (success, users) => {
-			if (success) {
+		}, (error, users) => {
+			if (!error) {
 				dispatch({
 					type: 'SELF_JOIN',
 					data: {
@@ -19,12 +19,20 @@ export function join(room, username) {
 					}
 				});
 				browserHistory.replace('/room/' + room);
+				dispatch({
+					type: 'MESSAGE',
+					data: ''
+				});
 			} else {
 				dispatch({
 					type: 'SELF_JOIN',
 					data: {
 						users: []
 					}
+				});
+				dispatch({
+					type: 'MESSAGE',
+					data: error
 				});
 			}
 		});

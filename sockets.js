@@ -24,12 +24,12 @@ module.exports = function (options) {
 				}
 				roomName = room;
 				userName = username;
-				fn(true, Array.from(roomSet));
+				fn('', Array.from(roomSet));
 				roomSet.add(username);
 				socket.join(room);
 				socket.broadcast.to(room).emit('USER_JOIN', username);
 			} else {
-				fn(false);
+				fn('Username already taken');
 			}
 		});
 

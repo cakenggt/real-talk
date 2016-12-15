@@ -71,7 +71,7 @@
 	
 	var _chatView2 = _interopRequireDefault(_chatView);
 	
-	var _loginView = __webpack_require__(/*! ./components/login-view.jsx */ 567);
+	var _loginView = __webpack_require__(/*! ./components/login-view.jsx */ 568);
 	
 	var _loginView2 = _interopRequireDefault(_loginView);
 	
@@ -38549,7 +38549,7 @@
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 537);
 	
-	var _chatActions = __webpack_require__(/*! ../actionCreators/chat-actions */ 568);
+	var _chatActions = __webpack_require__(/*! ../actionCreators/chat-actions */ 567);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -38777,6 +38777,89 @@
 
 /***/ },
 /* 567 */
+/*!********************************************!*\
+  !*** ./app/actionCreators/chat-actions.js ***!
+  \********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.socket = undefined;
+	exports.join = join;
+	exports.sendChange = sendChange;
+	exports.sendMessage = sendMessage;
+	exports.sendVisibilityChange = sendVisibilityChange;
+	
+	var _reactRouter = __webpack_require__(/*! react-router */ 328);
+	
+	var socket = exports.socket = io(); /* global io */
+	function join(room, username) {
+		return function (dispatch) {
+			socket.emit('JOIN', {
+				room: room,
+				username: username
+			}, function (error, users) {
+				if (!error) {
+					dispatch({
+						type: 'SELF_JOIN',
+						data: {
+							room: room,
+							username: username,
+							users: users
+						}
+					});
+					_reactRouter.browserHistory.replace('/room/' + room);
+					dispatch({
+						type: 'MESSAGE',
+						data: ''
+					});
+				} else {
+					dispatch({
+						type: 'SELF_JOIN',
+						data: {
+							users: []
+						}
+					});
+					dispatch({
+						type: 'MESSAGE',
+						data: error
+					});
+				}
+			});
+		};
+	}
+	
+	function sendChange(message) {
+		return function () {
+			socket.emit('MESSAGE_CHANGE', message);
+		};
+	}
+	
+	function sendMessage(message) {
+		return function (dispatch, getState) {
+			var state = getState();
+			socket.emit('MESSAGE_SEND', message);
+			dispatch({
+				type: 'MESSAGE_SEND',
+				data: {
+					user: state.chat.username,
+					message: message
+				}
+			});
+		};
+	}
+	
+	function sendVisibilityChange(hidden) {
+		return function () {
+			socket.emit('VISIBILITY_CHANGE', hidden);
+		};
+	}
+
+/***/ },
+/* 568 */
 /*!***************************************!*\
   !*** ./app/components/login-view.jsx ***!
   \***************************************/
@@ -38796,7 +38879,7 @@
 	
 	var _reactRouter = __webpack_require__(/*! react-router */ 328);
 	
-	var _chatActions = __webpack_require__(/*! ../actionCreators/chat-actions */ 568);
+	var _chatActions = __webpack_require__(/*! ../actionCreators/chat-actions */ 567);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -38917,81 +39000,6 @@
 	};
 	
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(LoginView);
-
-/***/ },
-/* 568 */
-/*!********************************************!*\
-  !*** ./app/actionCreators/chat-actions.js ***!
-  \********************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	exports.socket = undefined;
-	exports.join = join;
-	exports.sendChange = sendChange;
-	exports.sendMessage = sendMessage;
-	exports.sendVisibilityChange = sendVisibilityChange;
-	
-	var _reactRouter = __webpack_require__(/*! react-router */ 328);
-	
-	var socket = exports.socket = io(); /* global io */
-	function join(room, username) {
-		return function (dispatch) {
-			socket.emit('JOIN', {
-				room: room,
-				username: username
-			}, function (success, users) {
-				if (success) {
-					dispatch({
-						type: 'SELF_JOIN',
-						data: {
-							room: room,
-							username: username,
-							users: users
-						}
-					});
-					_reactRouter.browserHistory.replace('/room/' + room);
-				} else {
-					dispatch({
-						type: 'SELF_JOIN',
-						data: {
-							users: []
-						}
-					});
-				}
-			});
-		};
-	}
-	
-	function sendChange(message) {
-		return function () {
-			socket.emit('MESSAGE_CHANGE', message);
-		};
-	}
-	
-	function sendMessage(message) {
-		return function (dispatch, getState) {
-			var state = getState();
-			socket.emit('MESSAGE_SEND', message);
-			dispatch({
-				type: 'MESSAGE_SEND',
-				data: {
-					user: state.chat.username,
-					message: message
-				}
-			});
-		};
-	}
-	
-	function sendVisibilityChange(hidden) {
-		return function () {
-			socket.emit('VISIBILITY_CHANGE', hidden);
-		};
-	}
 
 /***/ },
 /* 569 */
@@ -39120,11 +39128,8 @@
 		var action = arguments[1];
 	
 		switch (action.type) {
-			case 'SELF_JOIN':
-				if (!action.data.username && !action.data.room) {
-					return 'This user already exists in the specified room';
-				}
-				return '';
+			case 'MESSAGE':
+				return action.data;
 			default:
 				return state;
 		}
@@ -39180,7 +39185,7 @@
 		});
 	};
 	
-	var _chatActions = __webpack_require__(/*! ./actionCreators/chat-actions */ 568);
+	var _chatActions = __webpack_require__(/*! ./actionCreators/chat-actions */ 567);
 
 /***/ },
 /* 572 */
@@ -39195,7 +39200,7 @@
 		value: true
 	});
 	
-	var _chatActions = __webpack_require__(/*! ./actionCreators/chat-actions */ 568);
+	var _chatActions = __webpack_require__(/*! ./actionCreators/chat-actions */ 567);
 	
 	exports.default = function (dispatch) {
 		document.addEventListener('visibilitychange', function () {
