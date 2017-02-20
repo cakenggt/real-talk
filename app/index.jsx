@@ -9,7 +9,7 @@ import ChatView from './components/chat-view.jsx';
 import LoginView from './components/login-view.jsx';
 import chatReducer from './reducers/chat-reducer';
 import messageReducer from './reducers/message-reducer';
-import addSocketListeners from './socket-listeners';
+import socketMiddleware from './socket-listeners';
 import addDocumentListeners from './document-listeners';
 
 var reducer = combineReducers({
@@ -20,11 +20,10 @@ var reducer = combineReducers({
 var store = createStore(
 	reducer,
 	applyMiddleware(
-		thunk
+		thunk,
+		socketMiddleware
 	)
 );
-
-addSocketListeners(store.dispatch, store.getState);
 
 addDocumentListeners(store.dispatch);
 
